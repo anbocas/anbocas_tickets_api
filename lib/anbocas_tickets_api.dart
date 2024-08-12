@@ -9,4 +9,4 @@ export 'src/model/ticket_model.dart';
 export 'src/model/event_summary_response.dart';
 export 'src/model/order/order_response.dart';
 export 'src/model/order/single_order_data.dart';
-part 'src/api/exception/anbocas_tickets_api_exceptions.dart';
+part 'src/api/exception/anbocas_api_exceptions.dart';
