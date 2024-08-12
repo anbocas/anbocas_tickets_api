@@ -1,6 +1,6 @@
-# Anbocas Api Flutter
+# Anbocas Tickets API
 
-Anbocas Api Flutter is a Flutter plugin designed to simplify API requests for managing company data, events, and tickets within your application. The plugin handles API calls with a simple, centralized configuration, making it easy to integrate and manage.
+Anbocas Tickets API is a Dart plugin designed to simplify API requests for managing company data, events, and tickets within your application. The plugin handles API calls with a simple, centralized configuration, making it easy to integrate and manage.
 
 # Features
 
@@ -23,7 +23,7 @@ Add `anbocas_tickets_api` to your `pubspec.yaml` file:
 
 ```dart
 dependencies:
-  anbocas_tickets_api: ^1.0.0
+  anbocas_tickets_api: ^0.0.1
 
 ```
 
@@ -100,13 +100,13 @@ import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
 
 # API Overview
 
-Company API: Access company-related data.
-Event API: Manage event-related data.
-Tickets API: Handle ticket-related operations.
+1. Company API: Access company-related data.
+2. Event API: Manage event-related data.
+3. Tickets API: Handle ticket-related operations.
 
 # License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the BSD-3 License - see the LICENSE file for details.
 
 # Support
 
