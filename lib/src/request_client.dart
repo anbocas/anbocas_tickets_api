@@ -22,12 +22,12 @@ class RequestClient {
   intConfig() {
     _dio.options = BaseOptions(
       receiveDataWhenStatusError: true,
-      baseUrl: AnbocasRequestPlugin.instance!.baseUrl,
-      queryParameters: AnbocasRequestPlugin.instance!.defaultQueryParameters,
-      connectTimeout: AnbocasRequestPlugin.instance!.connectTimeout,
-      headers: AnbocasRequestPlugin.instance!.defaultHeaders,
+      baseUrl: AnbocasTicketsApi.instance!.baseUrl,
+      queryParameters: AnbocasTicketsApi.instance!.defaultQueryParameters,
+      connectTimeout: AnbocasTicketsApi.instance!.connectTimeout,
+      headers: AnbocasTicketsApi.instance!.defaultHeaders,
     );
-    if (!kReleaseMode && AnbocasRequestPlugin.instance!.enableLog) {
+    if (!kReleaseMode && AnbocasTicketsApi.instance!.enableLog) {
       addInterceptorOnce(ApiLogInterceptor());
     }
 
@@ -35,7 +35,7 @@ class RequestClient {
         .addAll({Headers.acceptHeader: Headers.jsonContentType});
 
     // add token interceptor
-    if (AnbocasRequestPlugin.instance?.token != null) {
+    if (AnbocasTicketsApi.instance?.token != null) {
       addInterceptorOnce(TokenInterceptor());
     }
   }
@@ -62,7 +62,7 @@ class RequestClient {
   }
 
   static refreshConfig() {
-    print('Refresh');
+    debugPrint('Refresh');
     _instance = RequestClient._();
   }
 }

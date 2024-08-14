@@ -9,14 +9,14 @@ class CompanyApi {
 
   CompanyApi({required RequestClient client}) : _client = client;
 
-  Future<List<CompanyModel>?> get(CompanyGetRequest req) async {
+  Future<List<AnbocasCompanyModel>?> get(CompanyGetRequest req) async {
     try {
       final response = await _client.dio.get(
         ApiConstant.COMPANY_END_POINT,
         queryParameters: req.toJson(),
       );
       return (response.data['data'] as List)
-          .map((e) => CompanyModel.fromJson(e))
+          .map((e) => AnbocasCompanyModel.fromJson(e))
           .toList();
     } catch (e) {
       handleError(e);
@@ -24,7 +24,7 @@ class CompanyApi {
     }
   }
 
-  Future<CompanyModel?> details({
+  Future<AnbocasCompanyModel?> details({
     required String companyId,
   }) async {
     try {
@@ -33,7 +33,7 @@ class CompanyApi {
       );
 
       if (response.statusCode == 200) {
-        return CompanyModel.fromJson(response.data['data']);
+        return AnbocasCompanyModel.fromJson(response.data['data']);
       } else {
         throw Exception("Failed to get company: ${response.statusMessage}");
       }
@@ -43,7 +43,7 @@ class CompanyApi {
     }
   }
 
-  Future<CompanyModel?> createCompany(CreateCompanyRequest req) async {
+  Future<AnbocasCompanyModel?> createCompany(CreateCompanyRequest req) async {
     try {
       var formData = await req.toJson();
 
@@ -53,7 +53,7 @@ class CompanyApi {
       );
 
       if (response.statusCode == 200) {
-        return CompanyModel.fromJson(response.data['data']);
+        return AnbocasCompanyModel.fromJson(response.data['data']);
       } else {
         throw Exception("Failed to create company: ${response.statusMessage}");
       }
@@ -82,7 +82,7 @@ class CompanyApi {
     }
   }
 
-  Future<CompanyModel?> updateCompany(UpdateCompanyRequest req) async {
+  Future<AnbocasCompanyModel?> updateCompany(UpdateCompanyRequest req) async {
     try {
       var formData = await req.toJson();
       final response = await _client.dio.put(
@@ -91,7 +91,7 @@ class CompanyApi {
       );
 
       if (response.statusCode == 200) {
-        return CompanyModel.fromJson(response.data['data']);
+        return AnbocasCompanyModel.fromJson(response.data['data']);
       } else {
         throw Exception("Failed to update company: ${response.statusMessage}");
       }

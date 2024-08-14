@@ -3,13 +3,14 @@ import 'package:anbocas_tickets_api/src/api/constant.dart';
 import 'package:anbocas_tickets_api/src/api/exception/handle_exception.dart';
 import 'package:anbocas_tickets_api/src/request_client.dart';
 import 'package:dio/dio.dart';
+import 'package:intl/intl.dart';
 
 class EventApi {
   final RequestClient _client;
 
   EventApi({required RequestClient client}) : _client = client;
 
-  Future<List<EventModel>?> get({
+  Future<List<AnbocasEventModel>?> get({
     int page = 1,
     bool paginate = true,
     String? search,
@@ -36,7 +37,7 @@ class EventApi {
 
       if (response.data['data'] != null) {
         return (response.data['data'] as List)
-            .map((e) => EventModel.fromJson(e))
+            .map((e) => AnbocasEventModel.fromJson(e))
             .toList();
       } else {
         return [];
@@ -116,7 +117,7 @@ class EventApi {
     }
   }
 
-  Future<EventModel?> eventDetails({
+  Future<AnbocasEventModel?> eventDetails({
     required String eventId,
   }) async {
     try {
@@ -126,7 +127,7 @@ class EventApi {
       );
 
       if (response.data['data'] != null) {
-        return EventModel.fromJson(response.data['data']);
+        return AnbocasEventModel.fromJson(response.data['data']);
       } else {
         return null;
       }
@@ -179,57 +180,43 @@ class EventApi {
     }
   }
 
-  Future<EventModel?> createEvent({
+  Future<AnbocasEventModel?> createEvent({
     required String categoryId,
     required String companyId,
     required String name,
     required String description,
-    required String website,
+    String? website,
     required String location,
     required String latitude,
     required String longitude,
-    required String startDate,
-    required String endDate,
-    required String bookingStartDate,
+    required DateTime startDateTime,
+    required DateTime endDateTime,
     bool isPublic = true,
-    bool isFree = true,
-    required TicketLocationType locationType,
+    bool isFree = false,
+    required EventLocationType locationType,
     String? meetingLink,
     bool groupTicketingAllowed = false,
-    required String commission,
     bool isBookingOpen = true,
-    required String filePath,
+    required String bannerFilePath,
   }) async {
     try {
-      // YYYY-MM-DD HH:MM
-      String dateFormat = r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$';
-      RegExp regExp = RegExp(dateFormat);
-
-      if (!regExp.hasMatch(startDate)) {
-        throw AnbocasFieldException(
-            "Invalid start date format. Expected format: 2024-08-04 10:08");
-      }
-      if (!regExp.hasMatch(endDate)) {
-        throw AnbocasFieldException(
-            "Invalid end date format. Expected format: 2024-08-04 10:08");
-      }
-      if (!regExp.hasMatch(bookingStartDate)) {
-        throw AnbocasFieldException(
-            "Invalid booking start date format. Expected format: 2024-08-04 10:08");
-      }
-
-      if (locationType == TicketLocationType.virtual && meetingLink == null) {
+      if (locationType == EventLocationType.virtual && meetingLink == null) {
         throw AnbocasFieldException(
             "Meeting link is required for virtual events");
       }
 
       // Prepare the file for upload
-      MultipartFile file = await MultipartFile.fromFile(filePath,
-          filename: filePath.split('/').last);
+      MultipartFile? banner;
+      if (bannerFilePath != '') {
+        banner = await MultipartFile.fromFile(bannerFilePath,
+            filename: bannerFilePath.split('/').last);
+      }
+
+      final dateFormat = DateFormat('yyyy-MM-dd hh:mm');
 
       // Prepare form data
       var formData = FormData.fromMap({
-        'banner': file,
+        'banner': banner,
         'category_id': categoryId,
         'company_id': companyId,
         'name': name,
@@ -238,15 +225,13 @@ class EventApi {
         'location': location,
         'latitude': latitude,
         'longitude': longitude,
-        'start_date': startDate,
-        'end_date': endDate,
-        'booking_start_date': bookingStartDate,
+        'start_date': dateFormat.format(startDateTime),
+        'end_date': dateFormat.format(endDateTime),
         'is_public': isPublic ? '1' : '0',
         'is_free': isFree ? '1' : '0',
         'location_type': locationType.value,
         'meeting_link': meetingLink,
         'group_ticketing_allowed': groupTicketingAllowed ? '1' : '0',
-        'commission': commission,
         'is_booking_open': isBookingOpen ? '1' : '0',
       });
 
@@ -257,7 +242,7 @@ class EventApi {
       );
 
       if (response.statusCode == 200) {
-        return EventModel.fromJson(response.data['data']);
+        return AnbocasEventModel.fromJson(response.data['data']);
       } else {
         throw Exception("Failed to create event: ${response.statusMessage}");
       }
@@ -290,7 +275,7 @@ class EventApi {
     }
   }
 
-  Future<EventModel?> updateEvent({
+  Future<AnbocasEventModel?> updateEvent({
     required String eventId,
     String? categoryId,
     String? companyId,
@@ -305,7 +290,7 @@ class EventApi {
     String? bookingStartDate,
     bool? isPublic,
     bool? isFree,
-    TicketLocationType? locationType,
+    EventLocationType? locationType,
     String? meetingLink,
     bool? groupTicketingAllowed,
     String? commission,
@@ -330,7 +315,7 @@ class EventApi {
             "Invalid booking start date format. Expected format: 2024-08-04 10:08");
       }
 
-      if (locationType == TicketLocationType.virtual &&
+      if (locationType == EventLocationType.virtual &&
           (meetingLink == null || meetingLink.isEmpty)) {
         throw AnbocasFieldException(
             "Meeting link is required for virtual events");
@@ -401,7 +386,7 @@ class EventApi {
       );
 
       if (response.statusCode == 200) {
-        return EventModel.fromJson(response.data['data']);
+        return AnbocasEventModel.fromJson(response.data['data']);
       } else {
         throw Exception("Failed to update event: ${response.statusMessage}");
       }

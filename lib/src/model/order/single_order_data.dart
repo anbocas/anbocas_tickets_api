@@ -29,8 +29,8 @@ class SingleOrderData {
   String? createdAt;
   String? updatedAt;
   List<TicketModel> tickets = []; // only available view the order
-  EventModel? event; // only available view the order
-  CompanyModel? company; // only available view the order
+  AnbocasEventModel? event; // only available view the order
+  AnbocasCompanyModel? company; // only available view the order
   OrderPayment? payment; // only available view the order
   List<OrderLogs> logs = []; // only available view the order
 
@@ -138,12 +138,14 @@ class SingleOrderData {
           .toList();
     }
     if (json["event"] is Map) {
-      event = json["event"] == null ? null : EventModel.fromJson(json["event"]);
+      event = json["event"] == null
+          ? null
+          : AnbocasEventModel.fromJson(json["event"]);
     }
     if (json["company"] is Map) {
       company = json["company"] == null
           ? null
-          : CompanyModel.fromJson(json["company"]);
+          : AnbocasCompanyModel.fromJson(json["company"]);
     }
     if (json["payment"] is Map) {
       payment = json["payment"] == null
@@ -156,41 +158,41 @@ class SingleOrderData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> _data = <String, dynamic>{};
-    _data["id"] = id;
-    _data["company_id"] = companyId;
-    _data["currency_id"] = currencyId;
-    _data["event_id"] = eventId;
-    _data["user_id"] = userId;
-    _data["order_number"] = orderNumber;
-    _data["sub_total"] = subTotal;
-    _data["coupon"] = coupon;
-    _data["discount_amount"] = discountAmount;
-    _data["convenience_fee"] = convenienceFee;
-    _data["convenience_tax"] = convenienceTax;
-    _data["total_convenience_fee"] = totalConvenienceFee;
-    _data["pg_fee"] = pgFee;
-    _data["organiser_pg_fee"] = organiserPgFee;
-    _data["parent_organiser_commission"] = parentOrganiserCommission;
-    _data["total_payable"] = totalPayable;
-    _data["name"] = name;
-    _data["email"] = email;
-    _data["phone"] = phone;
-    _data["is_guest_checkout"] = isGuestCheckout;
-    _data["status"] = status;
-    _data["created_at"] = createdAt;
-    _data["updated_at"] = updatedAt;
-    _data["tickets"] = tickets.map((e) => e.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data["id"] = id;
+    data["company_id"] = companyId;
+    data["currency_id"] = currencyId;
+    data["event_id"] = eventId;
+    data["user_id"] = userId;
+    data["order_number"] = orderNumber;
+    data["sub_total"] = subTotal;
+    data["coupon"] = coupon;
+    data["discount_amount"] = discountAmount;
+    data["convenience_fee"] = convenienceFee;
+    data["convenience_tax"] = convenienceTax;
+    data["total_convenience_fee"] = totalConvenienceFee;
+    data["pg_fee"] = pgFee;
+    data["organiser_pg_fee"] = organiserPgFee;
+    data["parent_organiser_commission"] = parentOrganiserCommission;
+    data["total_payable"] = totalPayable;
+    data["name"] = name;
+    data["email"] = email;
+    data["phone"] = phone;
+    data["is_guest_checkout"] = isGuestCheckout;
+    data["status"] = status;
+    data["created_at"] = createdAt;
+    data["updated_at"] = updatedAt;
+    data["tickets"] = tickets.map((e) => e.toJson()).toList();
     if (event != null) {
-      _data["event"] = event?.toJson();
+      data["event"] = event?.toJson();
     }
     if (company != null) {
-      _data["company"] = company?.toJson();
+      data["company"] = company?.toJson();
     }
     if (payment != null) {
-      _data["payment"] = payment?.toJson();
+      data["payment"] = payment?.toJson();
     }
-    _data["logs"] = logs.map((e) => e.toJson()).toList();
-    return _data;
+    data["logs"] = logs.map((e) => e.toJson()).toList();
+    return data;
   }
 }

@@ -36,40 +36,53 @@ class CompanyGetRequest extends CompanyRequest {
 
 class CreateCompanyRequest extends CompanyRequest {
   final String name;
-  final String website;
-  final String location;
-  final String phone;
-  final String taxId;
   final String currencyId;
   final String brandColor;
-  final String supportPhone;
+  final String? website;
+  final String? location;
+  final String? phone;
+  final String? taxId;
+  final String? supportPhone;
   final String? supportEmail;
-  final String parentCommission;
+  final String? parentCommission;
   final String? parentId;
-  final String bannerFilePath;
+  final String? bannerFilePath;
+  final String? logoFilePath;
+  final String? description;
 
   CreateCompanyRequest({
     required this.name,
-    required this.website,
-    required this.location,
-    required this.phone,
-    required this.taxId,
+    this.location,
+    this.phone,
+    this.taxId,
     required this.currencyId,
-    required this.brandColor,
-    required this.supportPhone,
-    this.supportEmail,
-    required this.parentCommission,
+    this.supportPhone,
+    this.parentCommission,
+    this.bannerFilePath,
+    this.logoFilePath,
     this.parentId,
-    required this.bannerFilePath,
+    this.supportEmail,
+    this.brandColor = '#000000',
+    this.website,
+    this.description,
   });
 
   @override
   Future<FormData> toJson() async {
-    MultipartFile file = await MultipartFile.fromFile(bannerFilePath,
-        filename: bannerFilePath.split('/').last);
+    MultipartFile? logo;
+    if (logoFilePath != null) {
+      logo = await MultipartFile.fromFile(logoFilePath!,
+          filename: bannerFilePath?.split('/').last);
+    }
+    MultipartFile? banner;
+    if (bannerFilePath != null) {
+      banner = await MultipartFile.fromFile(bannerFilePath!,
+          filename: bannerFilePath?.split('/').last);
+    }
 
     var formData = FormData.fromMap({
-      'logo': file,
+      'logo': logo,
+      'banner': banner,
       'name': name,
       'website': website,
       'location': location,
@@ -78,9 +91,9 @@ class CreateCompanyRequest extends CompanyRequest {
       'currency_id': currencyId,
       'brand_color': brandColor,
       'support_phone': supportPhone,
-      if (supportEmail != null) 'support_email': supportEmail,
+      'support_email': supportEmail,
       'parent_comission': parentCommission,
-      if (parentId != null) 'parent_id': parentId,
+      'parent_id': parentId,
     });
 
     return formData;

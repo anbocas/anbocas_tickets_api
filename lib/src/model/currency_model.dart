@@ -22,11 +22,11 @@ class Currency {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> _data = <String, dynamic>{};
-    _data["id"] = id;
-    _data["name"] = name;
-    _data["code"] = code;
-    _data["symbol"] = symbol;
-    return _data;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data["id"] = id;
+    data["name"] = name;
+    data["code"] = code;
+    data["symbol"] = symbol;
+    return data;
   }
 }

@@ -1,16 +1,15 @@
-
 import 'package:anbocas_tickets_api/src/model/company_model.dart';
 import 'package:anbocas_tickets_api/src/model/ticket_model.dart';
 
-enum TicketLocationType {
+enum EventLocationType {
   virtual("VIRTUAL"),
   inPerson("IN_PERSON");
 
-  const TicketLocationType(this.value);
+  const EventLocationType(this.value);
   final String value;
 }
 
-class EventModel {
+class AnbocasEventModel {
   String? id;
   String? categoryId;
   String? companyId;
@@ -37,17 +36,17 @@ class EventModel {
   String? updatedAt;
   bool? isExpired;
   List<TicketModel> tickets = []; // only available view the events
-  CompanyModel? company; // only available view the events
+  AnbocasCompanyModel? company; // only available view the events
 
-  TicketLocationType getLocationType() {
+  EventLocationType getLocationType() {
     if (locationType == "VIRTUAL") {
-      return TicketLocationType.virtual;
+      return EventLocationType.virtual;
     } else {
-      return TicketLocationType.inPerson;
+      return EventLocationType.inPerson;
     }
   }
 
-  EventModel(
+  AnbocasEventModel(
       {this.id,
       this.categoryId,
       this.companyId,
@@ -76,7 +75,7 @@ class EventModel {
       required this.tickets,
       this.company});
 
-  EventModel.fromJson(Map<String, dynamic> json) {
+  AnbocasEventModel.fromJson(Map<String, dynamic> json) {
     if (json["id"] is String) {
       id = json["id"];
     }
@@ -158,7 +157,7 @@ class EventModel {
     if (json["company"] is Map) {
       company = json["company"] == null
           ? null
-          : CompanyModel.fromJson(json["company"]);
+          : AnbocasCompanyModel.fromJson(json["company"]);
     }
   }
 

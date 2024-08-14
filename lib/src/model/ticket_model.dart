@@ -67,20 +67,20 @@ class TicketModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> _data = <String, dynamic>{};
-    _data["id"] = id;
-    _data["event_id"] = eventId;
-    _data["name"] = name;
-    _data["description"] = description;
-    _data["price"] = price;
-    _data["capacity"] = capacity;
-    _data["available"] = available;
-    _data["available_from"] = availableFrom;
-    _data["available_to"] = availableTo;
-    _data["status"] = status;
-    _data["created_at"] = createdAt;
-    _data["updated_at"] = updatedAt;
-    _data["formatted_price"] = formattedPrice;
-    return _data;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data["id"] = id;
+    data["event_id"] = eventId;
+    data["name"] = name;
+    data["description"] = description;
+    data["price"] = price;
+    data["capacity"] = capacity;
+    data["available"] = available;
+    data["available_from"] = availableFrom;
+    data["available_to"] = availableTo;
+    data["status"] = status;
+    data["created_at"] = createdAt;
+    data["updated_at"] = updatedAt;
+    data["formatted_price"] = formattedPrice;
+    return data;
   }
 }

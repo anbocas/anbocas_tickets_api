@@ -17,7 +17,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
-    AnbocasRequestPlugin.instance
+    AnbocasTicketsApi.instance
         ?.config(token: dotenv.env['API_KEY'], enableLog: true);
     super.initState();
   }
@@ -60,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void fetchingEvent() async {
-    await AnbocasRequestPlugin.event
+    await AnbocasTicketsApi.event
         .get(companyId: "08277ced-baec-4751-87b1-4786c786636a");
   }
 
