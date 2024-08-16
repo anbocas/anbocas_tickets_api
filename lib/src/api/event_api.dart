@@ -198,6 +198,7 @@ class EventApi {
     String? meetingLink,
     bool groupTicketingAllowed = false,
     bool isBookingOpen = true,
+    String? referenceId,
     required String bannerFilePath,
   }) async {
     try {
@@ -217,6 +218,7 @@ class EventApi {
 
       // Prepare form data
       var formData = FormData.fromMap({
+        'reference_id': referenceId,
         'banner': banner,
         'category_id': categoryId,
         'company_id': companyId,

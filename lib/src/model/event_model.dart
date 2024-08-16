@@ -38,6 +38,7 @@ class AnbocasEventModel {
   bool? isExpired;
   List<TicketModel> tickets = []; // only available view the events
   AnbocasCompanyModel? company; // only available view the events
+  String? referenceId;
 
   EventLocationType getLocationType() {
     if (locationType == "VIRTUAL") {
@@ -47,35 +48,37 @@ class AnbocasEventModel {
     }
   }
 
-  AnbocasEventModel(
-      {this.id,
-      this.categoryId,
-      this.companyId,
-      this.name,
-      this.slug,
-      this.imageUrl,
-      this.description,
-      this.website,
-      this.location,
-      this.venue,
-      this.latitude,
-      this.longitude,
-      this.locationType,
-      this.meetingLink,
-      this.startDate,
-      this.endDate,
-      this.isBookingOpen,
-      this.isFree,
-      this.isPublic,
-      this.absorbPlatformFee,
-      this.groupTicketingAllowed,
-      this.status,
-      this.createdBy,
-      this.createdAt,
-      this.updatedAt,
-      this.isExpired,
-      required this.tickets,
-      this.company});
+  AnbocasEventModel({
+    this.id,
+    this.categoryId,
+    this.companyId,
+    this.name,
+    this.slug,
+    this.imageUrl,
+    this.description,
+    this.website,
+    this.location,
+    this.venue,
+    this.latitude,
+    this.longitude,
+    this.locationType,
+    this.meetingLink,
+    this.startDate,
+    this.endDate,
+    this.isBookingOpen,
+    this.isFree,
+    this.isPublic,
+    this.absorbPlatformFee,
+    this.groupTicketingAllowed,
+    this.status,
+    this.createdBy,
+    this.createdAt,
+    this.updatedAt,
+    this.isExpired,
+    required this.tickets,
+    this.company,
+    this.referenceId,
+  });
 
   AnbocasEventModel.fromJson(Map<String, dynamic> json) {
     if (json["id"] is String) {
@@ -150,6 +153,9 @@ class AnbocasEventModel {
     }
     if (json["updated_at"] is String) {
       updatedAt = json["updated_at"];
+    }
+    if (json["reference_id"] is String) {
+      referenceId = json["reference_id"];
     }
     if (json["is_expired"] is bool) {
       isExpired = json["is_expired"];
