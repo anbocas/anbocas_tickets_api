@@ -214,7 +214,7 @@ class EventApi {
             filename: bannerFilePath.split('/').last);
       }
 
-      final dateFormat = DateFormat('yyyy-MM-dd hh:mm');
+      final dateFormat = DateFormat('yyyy-MM-dd HH:mm');
 
       // Prepare form data
       var formData = FormData.fromMap({
