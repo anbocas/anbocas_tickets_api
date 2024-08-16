@@ -62,7 +62,7 @@ class AnbocasTicketsApi {
     if (mode == ApiMode.production) {
       baseUrl = "https://api.anbocas.com";
     } else {
-      baseUrl = "https://sandbox.anbocas.com";
+      baseUrl = "https://sandbox-api.anbocas.com";
     }
     this.token = token ?? this.token;
     this.tokenType = tokenType ?? bearer;

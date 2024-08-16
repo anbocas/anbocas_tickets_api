@@ -1,4 +1,4 @@
-import 'package:anbocas_tickets_api/src/anbocas_request_plugin.dart';
+import 'package:anbocas_tickets_api/src/anbocas_tickets_api.dart';
 import 'package:anbocas_tickets_api/src/interceptor/api_log_interceptor.dart';
 import 'package:anbocas_tickets_api/src/interceptor/token_interceptor.dart';
 import 'package:dio/dio.dart';

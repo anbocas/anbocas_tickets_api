@@ -1,6 +1,6 @@
 library anbocas_tickets_api;
 
-export 'src/anbocas_request_plugin.dart';
+export 'src/anbocas_tickets_api.dart';
 export 'src/model/company_model.dart';
 export 'src/request_model/company_request.dart';
 export 'src/model/event_guests_response.dart';
