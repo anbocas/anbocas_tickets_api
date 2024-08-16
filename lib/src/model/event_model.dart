@@ -18,6 +18,7 @@ class AnbocasEventModel {
   String? imageUrl;
   String? description;
   dynamic website;
+  String? venue;
   String? location;
   double? latitude;
   double? longitude;
@@ -56,6 +57,7 @@ class AnbocasEventModel {
       this.description,
       this.website,
       this.location,
+      this.venue,
       this.latitude,
       this.longitude,
       this.locationType,
@@ -100,6 +102,9 @@ class AnbocasEventModel {
     website = json["website"];
     if (json["location"] is String) {
       location = json["location"];
+    }
+    if (json["venue"] is String) {
+      venue = json["venue"];
     }
     if (json["latitude"] is double) {
       latitude = json["latitude"];
@@ -171,6 +176,7 @@ class AnbocasEventModel {
     data["imageUrl"] = imageUrl;
     data["description"] = description;
     data["website"] = website;
+    data["venue"] = venue;
     data["location"] = location;
     data["latitude"] = latitude;
     data["longitude"] = longitude;
