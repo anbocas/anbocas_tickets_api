@@ -25,11 +25,12 @@ class EventGuestsResponse {
 }
 
 class Status {
-  int? all;
-  int? checkedIn;
-  int? notCheckedIn;
+  int all = 0;
+  int checkedIn = 0;
+  int notCheckedIn = 0;
 
-  Status({this.all, this.checkedIn, this.notCheckedIn});
+  Status(
+      {required this.all, required this.checkedIn, required this.notCheckedIn});
 
   Status.fromJson(Map<String, dynamic> json) {
     if (json["ALL"] is int) {

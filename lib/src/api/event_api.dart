@@ -52,6 +52,7 @@ class EventApi {
   Future<EventGuestsResponse?> guests({
     required String eventId,
     int page = 1,
+    bool paginate = true,
     String? search,
     int pageLength = 10,
   }) async {
@@ -60,6 +61,7 @@ class EventApi {
       Map<String, dynamic> queryParameters = {
         'page': page,
         'search': search,
+        'paginate': paginate,
         'page_length': pageLength,
       };
 
