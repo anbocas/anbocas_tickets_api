@@ -1,6 +1,7 @@
 import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
 import 'package:anbocas_tickets_api/src/api/constant.dart';
 import 'package:anbocas_tickets_api/src/api/exception/handle_exception.dart';
+import 'package:anbocas_tickets_api/src/model/checkin_response.dart';
 import 'package:anbocas_tickets_api/src/request_client.dart';
 import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
@@ -52,7 +53,7 @@ class EventApi {
   Future<EventGuestsResponse?> guests({
     required String eventId,
     int page = 1,
-    bool paginate = true,
+    bool paginate = false,
     String? search,
     int pageLength = 10,
   }) async {
@@ -161,7 +162,7 @@ class EventApi {
     }
   }
 
-  Future<bool> checkIn({
+  Future<CheckInResponse?> checkIn({
     required String eventId,
     required String code,
   }) async {
@@ -170,15 +171,16 @@ class EventApi {
       final response = await _client.dio.post(ApiConstant.EVENT_CHECK_IN,
           data: {"event_id": eventId, "code": code});
 
-      if (response.statusCode == 200) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (error) {
+      var data = CheckInResponse.fromJson(response.data);
+      data.statusCode = response.statusCode!;
+
+      return data;
+    } on DioException catch (error) {
       // Handle errors
-      handleError(error);
-      return false;
+      var data = CheckInResponse.fromJson(error.response?.data);
+      data.statusCode = 400;
+
+      return data;
     }
   }
 

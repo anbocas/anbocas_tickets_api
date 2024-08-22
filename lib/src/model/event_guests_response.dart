@@ -58,7 +58,7 @@ class EventGuests {
   String? email;
   dynamic phone;
   String? code;
-  dynamic checkInTime;
+  String? checkInTime;
 
   EventGuests({this.name, this.email, this.phone, this.code, this.checkInTime});
 
@@ -73,7 +73,9 @@ class EventGuests {
     if (json["code"] is String) {
       code = json["code"];
     }
-    checkInTime = json["check_in_time"];
+    if (json["check_in_time"] is String) {
+      checkInTime = json["check_in_time"];
+    }
   }
 
   Map<String, dynamic> toJson() {
