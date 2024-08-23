@@ -59,7 +59,6 @@ class EventGuests {
   dynamic phone;
   String? code;
   String? checkInTime;
-  late int qtyTicket;
   late String status;
 
   EventGuests(
@@ -68,7 +67,7 @@ class EventGuests {
       this.phone,
       this.code,
       this.checkInTime,
-      this.qtyTicket = 1,
+     
       this.status = 'NOT_CHECKED_IN'});
 
   EventGuests.fromJson(Map<String, dynamic> json) {
@@ -85,9 +84,6 @@ class EventGuests {
     if (json["check_in_time"] is String) {
       checkInTime = json["check_in_time"];
     }
-    if (json["qty_ticket"] is int) {
-      qtyTicket = json["qty_ticket"];
-    }
     if (json["status"] is String) {
       status = json["status"];
     }
@@ -101,7 +97,6 @@ class EventGuests {
     _data["code"] = code;
     _data["check_in_time"] = checkInTime;
     _data["status"] = status;
-    _data["qty_ticket"] = qtyTicket;
     return _data;
   }
 }
