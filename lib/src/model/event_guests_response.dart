@@ -1,3 +1,5 @@
+import 'package:anbocas_tickets_api/src/model/order/single_order_data.dart';
+
 class EventGuestsResponse {
   List<EventGuests> data = [];
   Status? status;
@@ -60,6 +62,7 @@ class EventGuests {
   String? code;
   String? checkInTime;
   late String status;
+  SingleOrderData? orderTicket;
 
   EventGuests(
       {this.name,
@@ -67,7 +70,6 @@ class EventGuests {
       this.phone,
       this.code,
       this.checkInTime,
-     
       this.status = 'NOT_CHECKED_IN'});
 
   EventGuests.fromJson(Map<String, dynamic> json) {
@@ -86,6 +88,9 @@ class EventGuests {
     }
     if (json["status"] is String) {
       status = json["status"];
+    }
+    if (json["order_ticket"] is Map) {
+      orderTicket = SingleOrderData.fromJson(json['order_ticket']);
     }
   }
 
