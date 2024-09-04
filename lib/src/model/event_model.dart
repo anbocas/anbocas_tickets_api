@@ -96,8 +96,8 @@ class AnbocasEventModel {
     if (json["slug"] is String) {
       slug = json["slug"];
     }
-    if (json["imageUrl"] is String) {
-      imageUrl = json["imageUrl"];
+    if (json["image_url"] is String) {
+      imageUrl = json["image_url"];
     }
     if (json["description"] is String) {
       description = json["description"];
