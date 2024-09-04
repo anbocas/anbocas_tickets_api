@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
 import 'package:anbocas_tickets_api/src/api/constant.dart';
 import 'package:anbocas_tickets_api/src/api/exception/handle_exception.dart';
@@ -203,7 +205,7 @@ class EventApi {
     bool groupTicketingAllowed = false,
     bool isBookingOpen = true,
     String? referenceId,
-    required String bannerFilePath,
+    String? bannerPath,
   }) async {
     try {
       if (locationType == EventLocationType.virtual && meetingLink == null) {
@@ -212,10 +214,17 @@ class EventApi {
       }
 
       // Prepare the file for upload
-      MultipartFile? banner;
-      if (bannerFilePath != '') {
-        banner = await MultipartFile.fromFile(bannerFilePath,
-            filename: bannerFilePath.split('/').last);
+      dynamic banner;
+
+      if (bannerPath != null && bannerPath != '') {
+        if (bannerPath.startsWith('http')) {
+          banner = bannerPath;
+        } else {
+          if (File(bannerPath).existsSync()) {
+            banner = await MultipartFile.fromFile(bannerPath,
+                filename: bannerPath.split('/').last);
+          }
+        }
       }
 
       final dateFormat = DateFormat('yyyy-MM-dd HH:mm');
