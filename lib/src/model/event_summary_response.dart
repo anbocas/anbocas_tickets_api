@@ -21,11 +21,11 @@ class EventSummaryResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> _data = <String, dynamic>{};
-    _data["stats"] = stats.map((e) => e.toJson()).toList();
-    _data["orders"] = orders.map((e) => e.toJson()).toList();
-    _data["message"] = message;
-    return _data;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data["stats"] = stats.map((e) => e.toJson()).toList();
+    data["orders"] = orders.map((e) => e.toJson()).toList();
+    data["message"] = message;
+    return data;
   }
 }
 
@@ -94,21 +94,21 @@ class EventOrders {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> _data = <String, dynamic>{};
-    _data["order_number"] = orderNumber;
-    _data["name"] = name;
-    _data["id"] = id;
-    _data["created_at"] = createdAt;
-    _data["status"] = status;
-    _data["event_id"] = eventId;
-    _data["total_payable"] = totalPayable;
-    _data["total_convenience_fee"] = totalConvenienceFee;
-    _data["parent_organiser_commission"] = parentOrganiserCommission;
-    _data["pg_fee"] = pgFee;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data["order_number"] = orderNumber;
+    data["name"] = name;
+    data["id"] = id;
+    data["created_at"] = createdAt;
+    data["status"] = status;
+    data["event_id"] = eventId;
+    data["total_payable"] = totalPayable;
+    data["total_convenience_fee"] = totalConvenienceFee;
+    data["parent_organiser_commission"] = parentOrganiserCommission;
+    data["pg_fee"] = pgFee;
     if (tickets != null) {
-      _data["tickets"] = tickets?.map((e) => e.toJson()).toList();
+      data["tickets"] = tickets?.map((e) => e.toJson()).toList();
     }
-    return _data;
+    return data;
   }
 }
 
@@ -160,16 +160,16 @@ class Tickets {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> _data = <String, dynamic>{};
-    _data["id"] = id;
-    _data["order_id"] = orderId;
-    _data["ticket_id"] = ticketId;
-    _data["price"] = price;
-    _data["quantity"] = quantity;
-    _data["total"] = total;
-    _data["created_at"] = createdAt;
-    _data["updated_at"] = updatedAt;
-    return _data;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data["id"] = id;
+    data["order_id"] = orderId;
+    data["ticket_id"] = ticketId;
+    data["price"] = price;
+    data["quantity"] = quantity;
+    data["total"] = total;
+    data["created_at"] = createdAt;
+    data["updated_at"] = updatedAt;
+    return data;
   }
 }
 
@@ -193,10 +193,10 @@ class EventStats {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> _data = <String, dynamic>{};
-    _data["title"] = title;
-    _data["value"] = value;
-    _data["is_amount"] = isAmount;
-    return _data;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data["title"] = title;
+    data["value"] = value;
+    data["is_amount"] = isAmount;
+    return data;
   }
 }

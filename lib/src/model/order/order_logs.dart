@@ -22,11 +22,11 @@ class OrderLogs {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> _data = <String, dynamic>{};
-    _data["id"] = id;
-    _data["order_id"] = orderId;
-    _data["text"] = text;
-    _data["created_at"] = createdAt;
-    return _data;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data["id"] = id;
+    data["order_id"] = orderId;
+    data["text"] = text;
+    data["created_at"] = createdAt;
+    return data;
   }
 }

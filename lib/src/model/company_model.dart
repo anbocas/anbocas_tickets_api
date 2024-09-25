@@ -1,6 +1,6 @@
 import 'package:anbocas_tickets_api/src/model/currency_model.dart';
 
-class CompanyModel {
+class AnbocasCompanyModel {
   String? id;
   String? userId;
   String? name;
@@ -12,7 +12,7 @@ class CompanyModel {
   String? parentCommission;
   Currency? currency;
 
-  CompanyModel.fromJson(Map<String, dynamic> json) {
+  AnbocasCompanyModel.fromJson(Map<String, dynamic> json) {
     if (json["id"] is String) {
       id = json["id"];
     }
@@ -45,19 +45,19 @@ class CompanyModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> _data = <String, dynamic>{};
-    _data["id"] = id;
-    _data["user_id"] = userId;
-    _data["name"] = name;
-    _data["slug"] = slug;
-    _data["currency_id"] = currencyId;
-    _data["brand_color"] = brandColor;
-    _data["logo"] = logo;
-    _data["parent_id"] = parentId;
-    _data["parent_commission"] = parentCommission;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data["id"] = id;
+    data["user_id"] = userId;
+    data["name"] = name;
+    data["slug"] = slug;
+    data["currency_id"] = currencyId;
+    data["brand_color"] = brandColor;
+    data["logo"] = logo;
+    data["parent_id"] = parentId;
+    data["parent_commission"] = parentCommission;
     if (currency != null) {
-      _data["currency"] = currency?.toJson();
+      data["currency"] = currency?.toJson();
     }
-    return _data;
+    return data;
   }
 }

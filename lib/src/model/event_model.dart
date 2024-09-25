@@ -1,16 +1,15 @@
-
 import 'package:anbocas_tickets_api/src/model/company_model.dart';
 import 'package:anbocas_tickets_api/src/model/ticket_model.dart';
 
-enum TicketLocationType {
+enum EventLocationType {
   virtual("VIRTUAL"),
   inPerson("IN_PERSON");
 
-  const TicketLocationType(this.value);
+  const EventLocationType(this.value);
   final String value;
 }
 
-class EventModel {
+class AnbocasEventModel {
   String? id;
   String? categoryId;
   String? companyId;
@@ -19,6 +18,7 @@ class EventModel {
   String? imageUrl;
   String? description;
   dynamic website;
+  String? venue;
   String? location;
   double? latitude;
   double? longitude;
@@ -37,46 +37,50 @@ class EventModel {
   String? updatedAt;
   bool? isExpired;
   List<TicketModel> tickets = []; // only available view the events
-  CompanyModel? company; // only available view the events
+  AnbocasCompanyModel? company; // only available view the events
+  String? referenceId;
 
-  TicketLocationType getLocationType() {
+  EventLocationType getLocationType() {
     if (locationType == "VIRTUAL") {
-      return TicketLocationType.virtual;
+      return EventLocationType.virtual;
     } else {
-      return TicketLocationType.inPerson;
+      return EventLocationType.inPerson;
     }
   }
 
-  EventModel(
-      {this.id,
-      this.categoryId,
-      this.companyId,
-      this.name,
-      this.slug,
-      this.imageUrl,
-      this.description,
-      this.website,
-      this.location,
-      this.latitude,
-      this.longitude,
-      this.locationType,
-      this.meetingLink,
-      this.startDate,
-      this.endDate,
-      this.isBookingOpen,
-      this.isFree,
-      this.isPublic,
-      this.absorbPlatformFee,
-      this.groupTicketingAllowed,
-      this.status,
-      this.createdBy,
-      this.createdAt,
-      this.updatedAt,
-      this.isExpired,
-      required this.tickets,
-      this.company});
+  AnbocasEventModel({
+    this.id,
+    this.categoryId,
+    this.companyId,
+    this.name,
+    this.slug,
+    this.imageUrl,
+    this.description,
+    this.website,
+    this.location,
+    this.venue,
+    this.latitude,
+    this.longitude,
+    this.locationType,
+    this.meetingLink,
+    this.startDate,
+    this.endDate,
+    this.isBookingOpen,
+    this.isFree,
+    this.isPublic,
+    this.absorbPlatformFee,
+    this.groupTicketingAllowed,
+    this.status,
+    this.createdBy,
+    this.createdAt,
+    this.updatedAt,
+    this.isExpired,
+    required this.tickets,
+    this.company,
+    this.referenceId,
+  });
 
-  EventModel.fromJson(Map<String, dynamic> json) {
+  AnbocasEventModel.fromJson(Map<String, dynamic> json) {
     if (json["id"] is String) {
       id = json["id"];
     }
@@ -92,8 +96,8 @@ class EventModel {
     if (json["slug"] is String) {
       slug = json["slug"];
     }
-    if (json["imageUrl"] is String) {
-      imageUrl = json["imageUrl"];
+    if (json["image_url"] is String) {
+      imageUrl = json["image_url"];
     }
     if (json["description"] is String) {
       description = json["description"];
@@ -101,6 +105,9 @@ class EventModel {
     website = json["website"];
     if (json["location"] is String) {
       location = json["location"];
+    }
+    if (json["venue"] is String) {
+      venue = json["venue"];
     }
     if (json["latitude"] is double) {
       latitude = json["latitude"];
@@ -147,6 +154,9 @@ class EventModel {
     if (json["updated_at"] is String) {
       updatedAt = json["updated_at"];
     }
+    if (json["reference_id"] is String) {
+      referenceId = json["reference_id"];
+    }
     if (json["is_expired"] is bool) {
       isExpired = json["is_expired"];
     }
@@ -158,7 +168,7 @@ class EventModel {
     if (json["company"] is Map) {
       company = json["company"] == null
           ? null
-          : CompanyModel.fromJson(json["company"]);
+          : AnbocasCompanyModel.fromJson(json["company"]);
     }
   }
 
@@ -172,6 +182,7 @@ class EventModel {
     data["imageUrl"] = imageUrl;
     data["description"] = description;
     data["website"] = website;
+    data["venue"] = venue;
     data["location"] = location;
     data["latitude"] = latitude;
     data["longitude"] = longitude;

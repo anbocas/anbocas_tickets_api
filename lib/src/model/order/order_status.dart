@@ -27,12 +27,12 @@ class OrderStatus {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> _data = <String, dynamic>{};
-    _data["ALL"] = all;
-    _data["COMPLETED"] = completed;
-    _data["PENDING"] = pending;
-    _data["FAILED"] = failed;
-    _data["CANCELLED"] = cancelled;
-    return _data;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data["ALL"] = all;
+    data["COMPLETED"] = completed;
+    data["PENDING"] = pending;
+    data["FAILED"] = failed;
+    data["CANCELLED"] = cancelled;
+    return data;
   }
 }

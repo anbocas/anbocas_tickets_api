@@ -1,17 +1,17 @@
 import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 class TokenInterceptor extends Interceptor {
   final String _tag = 'token';
   @override
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    String? token = AnbocasRequestPlugin.instance?.token;
-    print("configAuth token $token");
+    String? token = AnbocasTicketsApi.instance?.token;
+    debugPrint("configAuth token $token");
     if (token != null) {
-      options.headers.addAll({
-        "Authorization": "${AnbocasRequestPlugin.instance?.tokenType}$token"
-      });
+      options.headers.addAll(
+          {"Authorization": "${AnbocasTicketsApi.instance?.tokenType}$token"});
     }
     super.onRequest(options, handler);
   }

@@ -1,3 +1,5 @@
+import 'package:anbocas_tickets_api/src/model/order/single_order_data.dart';
+
 class EventGuestsResponse {
   List<EventGuests> data = [];
   Status? status;
@@ -25,11 +27,12 @@ class EventGuestsResponse {
 }
 
 class Status {
-  int? all;
-  int? checkedIn;
-  int? notCheckedIn;
+  int all = 0;
+  int checkedIn = 0;
+  int notCheckedIn = 0;
 
-  Status({this.all, this.checkedIn, this.notCheckedIn});
+  Status(
+      {required this.all, required this.checkedIn, required this.notCheckedIn});
 
   Status.fromJson(Map<String, dynamic> json) {
     if (json["ALL"] is int) {
@@ -57,9 +60,17 @@ class EventGuests {
   String? email;
   dynamic phone;
   String? code;
-  dynamic checkInTime;
+  String? checkInTime;
+  late String status;
+  SingleOrderData? orderTicket;
 
-  EventGuests({this.name, this.email, this.phone, this.code, this.checkInTime});
+  EventGuests(
+      {this.name,
+      this.email,
+      this.phone,
+      this.code,
+      this.checkInTime,
+      this.status = 'NOT_CHECKED_IN'});
 
   EventGuests.fromJson(Map<String, dynamic> json) {
     if (json["name"] is String) {
@@ -72,7 +83,15 @@ class EventGuests {
     if (json["code"] is String) {
       code = json["code"];
     }
-    checkInTime = json["check_in_time"];
+    if (json["check_in_time"] is String) {
+      checkInTime = json["check_in_time"];
+    }
+    if (json["status"] is String) {
+      status = json["status"];
+    }
+    if (json["order_ticket"] is Map) {
+      orderTicket = SingleOrderData.fromJson(json['order_ticket']);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -82,6 +101,7 @@ class EventGuests {
     _data["phone"] = phone;
     _data["code"] = code;
     _data["check_in_time"] = checkInTime;
+    _data["status"] = status;
     return _data;
   }
 }

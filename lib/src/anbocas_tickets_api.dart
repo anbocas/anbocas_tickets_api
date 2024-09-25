@@ -1,13 +1,14 @@
 import 'package:anbocas_tickets_api/src/api/company_api.dart';
 import 'package:anbocas_tickets_api/src/api/event_api.dart';
 import 'package:anbocas_tickets_api/src/api/tickets_api.dart';
+import 'package:anbocas_tickets_api/src/enums.dart';
 import 'package:anbocas_tickets_api/src/request_client.dart';
 
-class AnbocasRequestPlugin {
-  static AnbocasRequestPlugin? _instance;
+class AnbocasTicketsApi {
+  static AnbocasTicketsApi? _instance;
 
-  static AnbocasRequestPlugin? get instance {
-    _instance ??= AnbocasRequestPlugin();
+  static AnbocasTicketsApi? get instance {
+    _instance ??= AnbocasTicketsApi();
     return _instance;
   }
 
@@ -47,14 +48,22 @@ class AnbocasRequestPlugin {
   ///  when time out.
   Duration? connectTimeout = const Duration(seconds: 30);
 
+  /// mode = sandbox, production
+  late ApiMode mode;
+
   void config({
     String? token,
     String? tokenType,
     Map<String, dynamic>? defaultQueryParameters,
     Map<String, dynamic>? defaultHeaders,
     bool? enableLog,
+    ApiMode mode = ApiMode.sandbox,
   }) async {
-    baseUrl = "https://sandbox.anbocas.com";
+    if (mode == ApiMode.production) {
+      baseUrl = "https://api.anbocas.com";
+    } else {
+      baseUrl = "https://sandbox-api.anbocas.com";
+    }
     this.token = token ?? this.token;
     this.tokenType = tokenType ?? bearer;
     if (this.defaultQueryParameters.isNotEmpty) {
@@ -69,5 +78,6 @@ class AnbocasRequestPlugin {
       this.defaultHeaders = defaultHeaders ?? this.defaultHeaders;
     }
     this.enableLog = enableLog ?? this.enableLog;
+    this.mode = mode;
   }
 }
