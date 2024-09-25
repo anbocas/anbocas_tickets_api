@@ -1,6 +1,6 @@
 name: anbocas_tickets_api
 description: Anbocas Tickets API to access platform APIs in Dart & Flutter projects.
-version: 0.0.1
+version: 0.0.2
 homepage: https://anbocas.com
 documentation: https://anbocas.com
 repository: https://github.com/anbocas/anbocas_tickets_api

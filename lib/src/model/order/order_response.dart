@@ -97,21 +97,21 @@ class OrderData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> _data = <String, dynamic>{};
-    _data["current_page"] = currentPage;
+    final Map<String, dynamic> json = <String, dynamic>{};
+    json["current_page"] = currentPage;
     if (data != null) {
-      _data["data"] = data?.map((e) => e.toJson()).toList();
+      json["data"] = data?.map((e) => e.toJson()).toList();
     }
-    _data["first_page_url"] = firstPageUrl;
-    _data["from"] = from;
-    _data["last_page"] = lastPage;
-    _data["last_page_url"] = lastPageUrl;
-    _data["next_page_url"] = nextPageUrl;
-    _data["path"] = path;
-    _data["per_page"] = perPage;
-    _data["prev_page_url"] = prevPageUrl;
-    _data["to"] = to;
-    _data["total"] = total;
-    return _data;
+    json["first_page_url"] = firstPageUrl;
+    json["from"] = from;
+    json["last_page"] = lastPage;
+    json["last_page_url"] = lastPageUrl;
+    json["next_page_url"] = nextPageUrl;
+    json["path"] = path;
+    json["per_page"] = perPage;
+    json["prev_page_url"] = prevPageUrl;
+    json["to"] = to;
+    json["total"] = total;
+    return json;
   }
 }
