@@ -1,4 +1,3 @@
-
 import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
 import 'package:anbocas_tickets_api/src/api/constant.dart';
 import 'package:anbocas_tickets_api/src/api/exception/handle_exception.dart';
@@ -55,6 +54,38 @@ class OrderApi {
     } catch (e) {
       handleError(e);
       return null;
+    }
+  }
+
+  Future<bool> cancelOrder({required String orderId}) async {
+    try {
+      final response = await _client.dio
+          .post(ApiConstant.CANCEL_ORDER, data: {'order_id': orderId});
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        throw Exception("Failed to fetch order: ${response.statusMessage}");
+      }
+    } catch (e) {
+      handleError(e);
+      return false;
+    }
+  }
+
+  Future<bool> verifyOrderPayment({required String razorpayPaymentId}) async {
+    try {
+      final response = await _client.dio.post(ApiConstant.VERIFY_ORDER_PAYMENT,
+          data: {'razorpay_payment_id': razorpayPaymentId});
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        throw Exception("Failed to fetch order: ${response.statusMessage}");
+      }
+    } catch (e) {
+      handleError(e);
+      return false;
     }
   }
 }
