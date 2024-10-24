@@ -251,7 +251,7 @@ class EventApi {
         'meeting_link': meetingLink,
         'group_ticketing_allowed': groupTicketingAllowed ? '1' : '0',
         'is_booking_open': isBookingOpen ? '1' : '0',
-        'create_organiser_for_venue': createOrganiserForVenue
+        'create_organiser_for_venue': createOrganiserForVenue ? '1' : 0,
       });
 
       // Make the API request
