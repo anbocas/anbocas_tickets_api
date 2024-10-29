@@ -78,6 +78,6 @@ class AnbocasTicketsApi {
       this.defaultHeaders = defaultHeaders ?? this.defaultHeaders;
     }
     this.enableLog = enableLog ?? this.enableLog;
-    this.mode = mode ?? this.mode;
+    this.mode = mode;
   }
 }

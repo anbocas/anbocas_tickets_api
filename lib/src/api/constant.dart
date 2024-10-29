@@ -8,4 +8,6 @@ class ApiConstant {
   static String EVENT_GUESTS(String id) => "/v1/event/$id/guests";
   static String EVENT_SUMMARY(String id) => "/v1/event/$id/summary";
   static String COMPANY_END_POINT = "/v1/companies";
+  static String CANCEL_ORDER = '/v1/order/cancel';
+  static String VERIFY_ORDER_PAYMENT = '/v1/verifyOrderPayment';
 }
