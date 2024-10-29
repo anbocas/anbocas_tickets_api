@@ -202,7 +202,8 @@ class EventApi {
     bool isFree = false,
     required EventLocationType locationType,
     String? meetingLink,
-    bool groupTicketingAllowed = false,
+    bool groupTicketingAllowed = true,
+    bool createOrganiserForVenue = false,
     bool isBookingOpen = true,
     String? referenceId,
     String? bannerPath,
@@ -250,6 +251,7 @@ class EventApi {
         'meeting_link': meetingLink,
         'group_ticketing_allowed': groupTicketingAllowed ? '1' : '0',
         'is_booking_open': isBookingOpen ? '1' : '0',
+        'create_organiser_for_venue': createOrganiserForVenue ? '1' : '0',
       });
 
       // Make the API request
