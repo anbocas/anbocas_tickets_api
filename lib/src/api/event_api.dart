@@ -314,7 +314,7 @@ class EventApi {
     bool? groupTicketingAllowed,
     String? commission,
     bool? isBookingOpen,
-    String? filePath,
+    String? bannerPath,
   }) async {
     try {
       // YYYY-MM-DD HH:MM
@@ -340,17 +340,28 @@ class EventApi {
             "Meeting link is required for virtual events");
       }
 
-      // Prepare the file for upload if provided
-      MultipartFile? file;
-      if (filePath != null) {
-        file = await MultipartFile.fromFile(filePath,
-            filename: filePath.split('/').last);
+      // Prepare the file for upload
+      dynamic banner;
+
+      if (bannerPath != null && bannerPath != '') {
+        if (bannerPath.startsWith('http')) {
+          banner = bannerPath;
+        } else {
+          if (File(bannerPath).existsSync()) {
+            banner = await MultipartFile.fromFile(bannerPath,
+                filename: bannerPath.split('/').last);
+          }
+        }
       }
 
       // Prepare form data
       var formData = FormData();
 
-      if (file != null) formData.files.add(MapEntry('banner', file));
+      if (banner is MultipartFile) {
+        formData.files.add(MapEntry('banner', banner));
+      } else {
+        formData.fields.add(MapEntry('banner', banner));
+      }
       if (categoryId != null) {
         formData.fields.add(MapEntry('category_id', categoryId));
       }
