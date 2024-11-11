@@ -305,8 +305,8 @@ class EventApi {
     String? location,
     String? latitude,
     String? longitude,
-    String? startDateTime,
-    String? endDateTime,
+    DateTime? startDateTime,
+    DateTime? endDateTime,
     bool? isPublic,
     bool? isFree,
     EventLocationType? locationType,
@@ -317,24 +317,13 @@ class EventApi {
     String? bannerPath,
   }) async {
     try {
-      // YYYY-MM-DD HH:MM
-      String dateFormat = r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$';
-      RegExp regExp = RegExp(dateFormat);
-
-      if (startDateTime != null && !regExp.hasMatch(startDateTime)) {
-        throw AnbocasFieldException(
-            "Invalid start date format. Expected format: 2024-08-04 10:08");
-      }
-      if (endDateTime != null && !regExp.hasMatch(endDateTime)) {
-        throw AnbocasFieldException(
-            "Invalid end date format. Expected format: 2024-08-04 10:08");
-      }
-
       if (locationType == EventLocationType.virtual &&
           (meetingLink == null || meetingLink.isEmpty)) {
         throw AnbocasFieldException(
             "Meeting link is required for virtual events");
       }
+
+      final dateFormat = DateFormat('yyyy-MM-dd HH:mm');
 
       // Prepare the file for upload
       dynamic banner;
@@ -376,10 +365,14 @@ class EventApi {
         formData.fields.add(MapEntry('longitude', longitude));
       }
       if (startDateTime != null) {
-        formData.fields.add(MapEntry('start_date', startDateTime));
+        formData.fields
+            .add(MapEntry('start_date', dateFormat.format(startDateTime)));
       }
-      if (endDateTime != null) formData.fields.add(MapEntry('end_date', endDateTime));
-     
+      if (endDateTime != null) {
+        formData.fields
+            .add(MapEntry('end_date', dateFormat.format(endDateTime)));
+      }
+
       if (isPublic != null) {
         formData.fields.add(MapEntry('is_public', isPublic ? '1' : '0'));
       }
