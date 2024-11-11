@@ -301,12 +301,12 @@ class EventApi {
     String? name,
     String? description,
     String? website,
+    String? venue,
     String? location,
     String? latitude,
     String? longitude,
-    String? startDate,
-    String? endDate,
-    String? bookingStartDate,
+    String? startDateTime,
+    String? endDateTime,
     bool? isPublic,
     bool? isFree,
     EventLocationType? locationType,
@@ -321,17 +321,13 @@ class EventApi {
       String dateFormat = r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$';
       RegExp regExp = RegExp(dateFormat);
 
-      if (startDate != null && !regExp.hasMatch(startDate)) {
+      if (startDateTime != null && !regExp.hasMatch(startDateTime)) {
         throw AnbocasFieldException(
             "Invalid start date format. Expected format: 2024-08-04 10:08");
       }
-      if (endDate != null && !regExp.hasMatch(endDate)) {
+      if (endDateTime != null && !regExp.hasMatch(endDateTime)) {
         throw AnbocasFieldException(
             "Invalid end date format. Expected format: 2024-08-04 10:08");
-      }
-      if (bookingStartDate != null && !regExp.hasMatch(bookingStartDate)) {
-        throw AnbocasFieldException(
-            "Invalid booking start date format. Expected format: 2024-08-04 10:08");
       }
 
       if (locationType == EventLocationType.virtual &&
@@ -373,18 +369,17 @@ class EventApi {
         formData.fields.add(MapEntry('description', description));
       }
       if (website != null) formData.fields.add(MapEntry('website', website));
+      if (venue != null) formData.fields.add(MapEntry('venue', venue));
       if (location != null) formData.fields.add(MapEntry('location', location));
       if (latitude != null) formData.fields.add(MapEntry('latitude', latitude));
       if (longitude != null) {
         formData.fields.add(MapEntry('longitude', longitude));
       }
-      if (startDate != null) {
-        formData.fields.add(MapEntry('start_date', startDate));
+      if (startDateTime != null) {
+        formData.fields.add(MapEntry('start_date', startDateTime));
       }
-      if (endDate != null) formData.fields.add(MapEntry('end_date', endDate));
-      if (bookingStartDate != null) {
-        formData.fields.add(MapEntry('booking_start_date', bookingStartDate));
-      }
+      if (endDateTime != null) formData.fields.add(MapEntry('end_date', endDateTime));
+     
       if (isPublic != null) {
         formData.fields.add(MapEntry('is_public', isPublic ? '1' : '0'));
       }
