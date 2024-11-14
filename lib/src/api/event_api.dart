@@ -301,12 +301,12 @@ class EventApi {
     String? name,
     String? description,
     String? website,
+    String? venue,
     String? location,
     String? latitude,
     String? longitude,
-    String? startDate,
-    String? endDate,
-    String? bookingStartDate,
+    DateTime? startDateTime,
+    DateTime? endDateTime,
     bool? isPublic,
     bool? isFree,
     EventLocationType? locationType,
@@ -314,43 +314,39 @@ class EventApi {
     bool? groupTicketingAllowed,
     String? commission,
     bool? isBookingOpen,
-    String? filePath,
+    String? bannerPath,
   }) async {
     try {
-      // YYYY-MM-DD HH:MM
-      String dateFormat = r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$';
-      RegExp regExp = RegExp(dateFormat);
-
-      if (startDate != null && !regExp.hasMatch(startDate)) {
-        throw AnbocasFieldException(
-            "Invalid start date format. Expected format: 2024-08-04 10:08");
-      }
-      if (endDate != null && !regExp.hasMatch(endDate)) {
-        throw AnbocasFieldException(
-            "Invalid end date format. Expected format: 2024-08-04 10:08");
-      }
-      if (bookingStartDate != null && !regExp.hasMatch(bookingStartDate)) {
-        throw AnbocasFieldException(
-            "Invalid booking start date format. Expected format: 2024-08-04 10:08");
-      }
-
       if (locationType == EventLocationType.virtual &&
           (meetingLink == null || meetingLink.isEmpty)) {
         throw AnbocasFieldException(
             "Meeting link is required for virtual events");
       }
 
-      // Prepare the file for upload if provided
-      MultipartFile? file;
-      if (filePath != null) {
-        file = await MultipartFile.fromFile(filePath,
-            filename: filePath.split('/').last);
+      final dateFormat = DateFormat('yyyy-MM-dd HH:mm');
+
+      // Prepare the file for upload
+      dynamic banner;
+
+      if (bannerPath != null && bannerPath != '') {
+        if (bannerPath.startsWith('http')) {
+          banner = bannerPath;
+        } else {
+          if (File(bannerPath).existsSync()) {
+            banner = await MultipartFile.fromFile(bannerPath,
+                filename: bannerPath.split('/').last);
+          }
+        }
       }
 
       // Prepare form data
       var formData = FormData();
 
-      if (file != null) formData.files.add(MapEntry('banner', file));
+      if (banner is MultipartFile) {
+        formData.files.add(MapEntry('banner', banner));
+      } else {
+        formData.fields.add(MapEntry('banner', banner));
+      }
       if (categoryId != null) {
         formData.fields.add(MapEntry('category_id', categoryId));
       }
@@ -362,18 +358,21 @@ class EventApi {
         formData.fields.add(MapEntry('description', description));
       }
       if (website != null) formData.fields.add(MapEntry('website', website));
+      if (venue != null) formData.fields.add(MapEntry('venue', venue));
       if (location != null) formData.fields.add(MapEntry('location', location));
       if (latitude != null) formData.fields.add(MapEntry('latitude', latitude));
       if (longitude != null) {
         formData.fields.add(MapEntry('longitude', longitude));
       }
-      if (startDate != null) {
-        formData.fields.add(MapEntry('start_date', startDate));
+      if (startDateTime != null) {
+        formData.fields
+            .add(MapEntry('start_date', dateFormat.format(startDateTime)));
       }
-      if (endDate != null) formData.fields.add(MapEntry('end_date', endDate));
-      if (bookingStartDate != null) {
-        formData.fields.add(MapEntry('booking_start_date', bookingStartDate));
+      if (endDateTime != null) {
+        formData.fields
+            .add(MapEntry('end_date', dateFormat.format(endDateTime)));
       }
+
       if (isPublic != null) {
         formData.fields.add(MapEntry('is_public', isPublic ? '1' : '0'));
       }
