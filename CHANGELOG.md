@@ -1,3 +1,7 @@
+## 0.0.5
+
+* API updates and Data Parsing Fixes
+
 ## 0.0.4
 
 * API updates and Datatype changes

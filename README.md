@@ -110,4 +110,4 @@ This project is licensed under the BSD-3 License - see the LICENSE file for deta
 
 # Support
 
-For any issues or to request an API key, please contact [support@anbocas.com] https://github.com/anbocas/anbocas_tickets_api
+For any issues or to request an API key, please contact [rahul@anbocas.com] https://github.com/anbocas/anbocas_tickets_api
