@@ -3,7 +3,7 @@ class TicketModel {
   String? eventId;
   String? name;
   String? description;
-  int? price;
+  double? price;
   int? capacity;
   int? available;
   dynamic availableFrom;
@@ -41,8 +41,11 @@ class TicketModel {
     if (json["description"] is String) {
       description = json["description"];
     }
-    if (json["price"] is int) {
+    if (json["price"] is double) {
       price = json["price"];
+    }
+    if (json["price"] is String) {
+      price = double.parse(json["price"]);
     }
     if (json["capacity"] is int) {
       capacity = json["capacity"];
