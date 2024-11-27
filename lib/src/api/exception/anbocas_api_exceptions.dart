@@ -9,6 +9,8 @@ class AnbocasAPIException implements Exception {
 
   @override
   String toString() => '$runtimeType - $_cause';
+
+  String get cause => _cause;
 }
 
 class AnbocasFieldException implements Exception {
