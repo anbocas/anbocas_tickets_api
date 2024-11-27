@@ -20,4 +20,6 @@ class AnbocasFieldException implements Exception {
 
   @override
   String toString() => '$runtimeType - $_error';
+
+  String get error => _error;
 }
