@@ -1,3 +1,7 @@
+## 0.0.8
+
+* Version Upgrades
+
 ## 0.0.7
 
 * Handle exceptions
