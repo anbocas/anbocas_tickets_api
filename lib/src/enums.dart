@@ -1,1 +1,1 @@
-enum ApiMode { sandbox, production }
+enum ApiMode { sandbox, production, development }
