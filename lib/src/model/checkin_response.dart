@@ -1,7 +1,10 @@
+import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
+
 class CheckInResponse {
   String? message;
   late int statusCode;
   String? name;
+  TicketModel? ticketModel;
 
   CheckInResponse({this.statusCode = 200});
 
@@ -11,6 +14,10 @@ class CheckInResponse {
     }
     if (json["name"] is String) {
       name = json["name"];
+    }
+    if (json["ticket"] is Map) {
+      ticketModel =
+          json["ticket"] == null ? null : TicketModel.fromJson(json["ticket"]);
     }
   }
 }
