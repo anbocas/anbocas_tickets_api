@@ -1,3 +1,7 @@
+## 0.0.9
+
+* Add a development environment
+
 ## 0.0.8
 
 * Version Upgrades
