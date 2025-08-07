@@ -1,3 +1,7 @@
+# FVM Version Cache
+.fvm/
+.fvmrc
+
 # Miscellaneous
 *.class
 *.log
@@ -29,3 +33,4 @@ migrate_working_dir/
 .packages
 build/
 *.lock
+
