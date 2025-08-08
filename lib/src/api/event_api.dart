@@ -38,10 +38,11 @@ class EventApi {
         queryParameters: queryParameters,
       );
 
-      if (response.data['data'] != null) {
-        return (response.data['data'] as List)
+      if (response.data['data']?["data"] != null) {
+        final events = (response.data['data']["data"] as List)
             .map((e) => AnbocasEventModel.fromJson(e))
             .toList();
+        return events;
       } else {
         return [];
       }
