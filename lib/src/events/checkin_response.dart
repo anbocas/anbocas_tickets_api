@@ -1,4 +1,4 @@
-import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
+import 'package:anbocas_tickets_api/src/shared/ticket_model.dart';
 
 class CheckInResponse {
   String? message;

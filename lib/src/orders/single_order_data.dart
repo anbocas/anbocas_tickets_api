@@ -1,8 +1,8 @@
-import 'package:anbocas_tickets_api/src/model/company_model.dart';
-import 'package:anbocas_tickets_api/src/model/event_model.dart';
-import 'package:anbocas_tickets_api/src/model/order/order_logs.dart';
-import 'package:anbocas_tickets_api/src/model/order/order_payment.dart';
-import 'package:anbocas_tickets_api/src/model/ticket_model.dart';
+import 'package:anbocas_tickets_api/src/companies/company_model.dart';
+import 'package:anbocas_tickets_api/src/events/event_model.dart';
+import 'package:anbocas_tickets_api/src/orders/order_logs.dart';
+import 'package:anbocas_tickets_api/src/orders/order_payment.dart';
+import 'package:anbocas_tickets_api/src/shared/ticket_model.dart';
 
 class SingleOrderData {
   String? id;

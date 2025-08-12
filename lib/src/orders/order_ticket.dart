@@ -1,4 +1,4 @@
-import 'package:anbocas_tickets_api/src/model/ticket_model.dart';
+import 'package:anbocas_tickets_api/src/shared/ticket_model.dart';
 
 class OrderTicket {
   String? id;

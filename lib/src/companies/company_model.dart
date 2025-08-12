@@ -1,4 +1,4 @@
-import 'package:anbocas_tickets_api/src/model/currency_model.dart';
+import 'package:anbocas_tickets_api/src/shared/currency_model.dart';
 
 class AnbocasCompanyModel {
   String? id;

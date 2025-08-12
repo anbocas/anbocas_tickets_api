@@ -1,5 +1,5 @@
-import 'package:anbocas_tickets_api/src/model/company_model.dart';
-import 'package:anbocas_tickets_api/src/model/ticket_model.dart';
+import 'package:anbocas_tickets_api/src/companies/company_model.dart';
+import 'package:anbocas_tickets_api/src/shared/ticket_model.dart';
 
 enum EventLocationType {
   virtual("VIRTUAL"),

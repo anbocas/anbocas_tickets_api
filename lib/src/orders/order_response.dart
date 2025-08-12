@@ -1,5 +1,5 @@
-import 'package:anbocas_tickets_api/src/model/order/order_status.dart';
-import 'package:anbocas_tickets_api/src/model/order/single_order_data.dart';
+import 'package:anbocas_tickets_api/src/orders/order_status.dart';
+import 'package:anbocas_tickets_api/src/orders/single_order_data.dart';
 
 class OrderResponse {
   OrderData? data;

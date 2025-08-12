@@ -1,14 +1,9 @@
-import 'package:anbocas_tickets_api/src/api/constant.dart';
-import 'package:anbocas_tickets_api/src/api/exception/handle_exception.dart';
-import 'package:anbocas_tickets_api/src/request_client.dart';
+import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
+import 'package:anbocas_tickets_api/src/tickets/constants.dart';
 import 'package:dio/dio.dart';
 
-class TicketsApi {
-  final RequestClient _client;
-
-  TicketsApi({required RequestClient client}) : _client = client;
-
-  Future<dynamic> get({
+class AnbocasTickets {
+  Future<dynamic> getTickets({
     required String eventId,
     int page = 1,
     bool paginate = true,
@@ -17,6 +12,8 @@ class TicketsApi {
     String? status,
   }) async {
     try {
+      final dio = AnbocasTicketsConfig.instance.dio;
+
       // Set up query parameters
       Map<String, dynamic> queryParameters = {
         'page': page,
@@ -27,15 +24,15 @@ class TicketsApi {
       };
 
       // Make the API request using RequestClient
-      final response = await _client.dio.get(
-        '${ApiConstant.GET_TICKET_BY_EVENT}$eventId',
+      final response = await dio.get(
+        TicketRoutes.getTicketByEventId(eventId),
         queryParameters: queryParameters,
       );
 
       // Return the response data
       return response.data;
-    } catch (e) {
-      handleError(e);
+    } catch (e, st) {
+      throw AnbocasApiException.fromException(e, st);
     }
   }
 
@@ -49,6 +46,8 @@ class TicketsApi {
       required String availableTo,
       required String status}) async {
     try {
+      final dio = AnbocasTicketsConfig.instance.dio;
+
       var data = FormData.fromMap({
         'event_id': eventId,
         'name': name,
@@ -60,8 +59,8 @@ class TicketsApi {
         'status': status
       });
 
-      final response = await _client.dio.post(
-        ApiConstant.TICKET_END_POINT,
+      final response = await dio.post(
+        TicketRoutes.createTicket,
         data: data,
       );
 
@@ -70,9 +69,8 @@ class TicketsApi {
       } else {
         throw Exception("Failed to create ticket: ${response.statusMessage}");
       }
-    } catch (e) {
-      handleError(e);
-      return null;
+    } catch (e, st) {
+      throw AnbocasApiException.fromException(e, st);
     }
   }
 
@@ -80,8 +78,9 @@ class TicketsApi {
     required String ticketId,
   }) async {
     try {
-      final response = await _client.dio.delete(
-        '${ApiConstant.TICKET_END_POINT}/$ticketId',
+      final dio = AnbocasTicketsConfig.instance.dio;
+      final response = await dio.delete(
+        TicketRoutes.deleteTicket(ticketId),
       );
 
       if (response.statusCode == 200) {
@@ -89,9 +88,8 @@ class TicketsApi {
       } else {
         throw Exception("Failed to delete ticket: ${response.statusMessage}");
       }
-    } catch (e) {
-      handleError(e);
-      return false;
+    } catch (e, st) {
+      throw AnbocasApiException.fromException(e, st);
     }
   }
 
@@ -99,8 +97,9 @@ class TicketsApi {
     required String ticketId,
   }) async {
     try {
-      final response = await _client.dio.get(
-        '${ApiConstant.TICKET_END_POINT}/$ticketId',
+      final dio = AnbocasTicketsConfig.instance.dio;
+      final response = await dio.get(
+        TicketRoutes.getTicketById(ticketId),
       );
 
       if (response.statusCode == 200) {
@@ -108,9 +107,8 @@ class TicketsApi {
       } else {
         throw Exception("Failed to get ticket: ${response.statusMessage}");
       }
-    } catch (e) {
-      handleError(e);
-      return null;
+    } catch (e, st) {
+      throw AnbocasApiException.fromException(e, st);
     }
   }
 
@@ -125,6 +123,7 @@ class TicketsApi {
       String? availableTo,
       String? status}) async {
     try {
+      final dio = AnbocasTicketsConfig.instance.dio;
       Map<String, dynamic> data = {};
 
       if (eventId != null) data['event_id'] = eventId;
@@ -136,8 +135,8 @@ class TicketsApi {
       if (availableTo != null) data['available_to'] = availableTo;
       if (status != null) data['status'] = status;
 
-      final response = await _client.dio.put(
-        '${ApiConstant.TICKET_END_POINT}/$ticketId',
+      final response = await dio.put(
+        TicketRoutes.updateTicket(ticketId),
         data: data,
       );
 
@@ -146,9 +145,8 @@ class TicketsApi {
       } else {
         throw Exception("Failed to update ticket: ${response.statusMessage}");
       }
-    } catch (e) {
-      handleError(e);
-      return null;
+    } catch (e, st) {
+      throw AnbocasApiException.fromException(e, st);
     }
   }
 }

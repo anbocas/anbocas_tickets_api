@@ -1,19 +1,12 @@
 import 'dart:io';
 
 import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
-import 'package:anbocas_tickets_api/src/api/constant.dart';
-import 'package:anbocas_tickets_api/src/api/exception/handle_exception.dart';
-import 'package:anbocas_tickets_api/src/model/checkin_response.dart';
-import 'package:anbocas_tickets_api/src/request_client.dart';
+import 'package:anbocas_tickets_api/src/events/constants.dart';
 import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 
-class EventApi {
-  final RequestClient _client;
-
-  EventApi({required RequestClient client}) : _client = client;
-
-  Future<List<AnbocasEventModel>?> get({
+class AnbocasEvents {
+  Future<List<AnbocasEventModel>?> getEvents({
     int page = 1,
     bool paginate = true,
     String? search,
@@ -22,6 +15,8 @@ class EventApi {
     required String companyId,
   }) async {
     try {
+      final dio = AnbocasTicketsConfig.instance.dio;
+
       // Set up query parameters
       Map<String, dynamic> queryParameters = {
         'page': page,
@@ -33,8 +28,8 @@ class EventApi {
       };
 
       // Make the API request using RequestClient
-      final response = await _client.dio.get(
-        ApiConstant.EVENT_END_POINT,
+      final response = await dio.get(
+        EventRoutes.getEvents,
         queryParameters: queryParameters,
       );
 
@@ -46,14 +41,12 @@ class EventApi {
       } else {
         return [];
       }
-    } catch (e) {
-      // Handle errors
-      handleError(e);
-      return null;
+    } catch (e, st) {
+      throw AnbocasApiException.fromException(e, st);
     }
   }
 
-  Future<EventGuestsResponse?> guests({
+  Future<EventGuestsResponse?> getGuests({
     required String eventId,
     int page = 1,
     bool paginate = false,
@@ -61,6 +54,8 @@ class EventApi {
     int pageLength = 10,
   }) async {
     try {
+      final dio = AnbocasTicketsConfig.instance.dio;
+
       // Set up query parameters
       Map<String, dynamic> queryParameters = {
         'page': page,
@@ -70,27 +65,27 @@ class EventApi {
       };
 
       // Make the API request using RequestClient
-      final response = await _client.dio.get(
-        ApiConstant.EVENT_GUESTS(eventId),
+      final response = await dio.get(
+        EventRoutes.getEventGuests(eventId),
         queryParameters: queryParameters,
       );
 
       // Return the response data
       return EventGuestsResponse.fromJson(response.data);
-    } catch (error) {
-      // Handle errors
-      handleError(error);
-      return null;
+    } catch (e, st) {
+      throw AnbocasApiException.fromException(e, st);
     }
   }
 
-  Future<EventSummaryResponse?> summary({
+  Future<EventSummaryResponse?> getEventSummary({
     required String eventId,
   }) async {
     try {
+      final dio = AnbocasTicketsConfig.instance.dio;
+
       // Make the API request using RequestClient
-      final response = await _client.dio.get(
-        ApiConstant.EVENT_SUMMARY(eventId),
+      final response = await dio.get(
+        EventRoutes.getEventSummary(eventId),
       );
 
       if (response.data['data'] != null) {
@@ -116,20 +111,20 @@ class EventApi {
         return EventSummaryResponse(
             stats: [], orders: [], message: response.data['message']);
       }
-    } catch (error) {
-      // Handle errors
-      handleError(error);
-      return null;
+    } catch (e, st) {
+      throw AnbocasApiException.fromException(e, st);
     }
   }
 
-  Future<AnbocasEventModel?> eventDetails({
+  Future<AnbocasEventModel?> getEventDetails({
     required String eventId,
   }) async {
     try {
+      final dio = AnbocasTicketsConfig.instance.dio;
+
       // Make the API request using RequestClient
-      final response = await _client.dio.get(
-        '${ApiConstant.EVENT_END_POINT}/$eventId',
+      final response = await dio.get(
+        EventRoutes.getEventDetails(eventId),
       );
 
       if (response.data['data'] != null) {
@@ -137,10 +132,8 @@ class EventApi {
       } else {
         return null;
       }
-    } catch (error) {
-      // Handle errors
-      handleError(error);
-      return null;
+    } catch (e, st) {
+      throw AnbocasApiException.fromException(e, st);
     }
   }
 
@@ -149,19 +142,24 @@ class EventApi {
     required List<String> codes,
   }) async {
     try {
+      final dio = AnbocasTicketsConfig.instance.dio;
+
       // Make the API request using RequestClient
-      final response = await _client.dio.post(ApiConstant.EVENT_CHECK_IN_BULK,
-          data: {"event_id": eventId, "codes": codes});
+      final response = await dio.post(
+        EventRoutes.checkInBulkEvent,
+        data: {
+          "event_id": eventId,
+          "codes": codes,
+        },
+      );
 
       if (response.statusCode == 200) {
         return true;
       } else {
         return false;
       }
-    } catch (error) {
-      // Handle errors
-      handleError(error);
-      return false;
+    } catch (e, st) {
+      throw AnbocasApiException.fromException(e, st);
     }
   }
 
@@ -170,9 +168,16 @@ class EventApi {
     required String code,
   }) async {
     try {
+      final dio = AnbocasTicketsConfig.instance.dio;
+
       // Make the API request using RequestClient
-      final response = await _client.dio.post(ApiConstant.EVENT_CHECK_IN,
-          data: {"event_id": eventId, "code": code});
+      final response = await dio.post(
+        EventRoutes.checkInEvent,
+        data: {
+          "event_id": eventId,
+          "code": code,
+        },
+      );
 
       var data = CheckInResponse.fromJson(response.data);
       data.statusCode = response.statusCode!;
@@ -255,9 +260,11 @@ class EventApi {
         'create_organiser_for_venue': createOrganiserForVenue ? '1' : '0',
       });
 
+      final dio = AnbocasTicketsConfig.instance.dio;
+
       // Make the API request
-      final response = await _client.dio.post(
-        ApiConstant.EVENT_END_POINT,
+      final response = await dio.post(
+        EventRoutes.createEvent,
         data: formData,
       );
 
@@ -266,10 +273,8 @@ class EventApi {
       } else {
         throw Exception("Failed to create event: ${response.statusMessage}");
       }
-    } catch (error) {
-      // Handle errors
-      handleError(error);
-      return null;
+    } catch (e, st) {
+      throw AnbocasApiException.fromException(e, st);
     }
   }
 
@@ -278,20 +283,20 @@ class EventApi {
     required String eventName,
   }) async {
     try {
-      final response = await _client.dio.delete(
-        '${ApiConstant.EVENT_END_POINT}/$eventId',
+      final dio = AnbocasTicketsConfig.instance.dio;
+
+      final response = await dio.delete(
+        EventRoutes.deleteEvent(eventId),
         data: {"name": eventName},
       );
 
       if (response.statusCode == 200) {
         return true;
-      } else {
-        throw Exception("Failed to create event: ${response.statusMessage}");
       }
-    } catch (error) {
-      // Handle errors
-      handleError(error);
-      return false;
+
+      throw Exception("Failed to create event: ${response.statusMessage}");
+    } catch (e, st) {
+      throw AnbocasApiException.fromException(e, st);
     }
   }
 
@@ -321,7 +326,8 @@ class EventApi {
       if (locationType == EventLocationType.virtual &&
           (meetingLink == null || meetingLink.isEmpty)) {
         throw AnbocasFieldException(
-            "Meeting link is required for virtual events");
+          "Meeting link is required for virtual events",
+        );
       }
 
       final dateFormat = DateFormat('yyyy-MM-dd HH:mm');
@@ -398,21 +404,20 @@ class EventApi {
             .add(MapEntry('is_booking_open', isBookingOpen ? '1' : '0'));
       }
 
+      final dio = AnbocasTicketsConfig.instance.dio;
+
       // Make the API request
-      final response = await _client.dio.post(
-        '${ApiConstant.EVENT_END_POINT}/$eventId',
+      final response = await dio.post(
+        EventRoutes.updateEvent(eventId),
         data: formData,
       );
 
       if (response.statusCode == 200) {
         return AnbocasEventModel.fromJson(response.data['data']);
-      } else {
-        throw Exception("Failed to update event: ${response.statusMessage}");
       }
-    } catch (error) {
-      // Handle errors
-      handleError(error);
-      return null;
+      throw Exception("Failed to update event: ${response.statusMessage}");
+    } catch (e, st) {
+      throw AnbocasApiException.fromException(e, st);
     }
   }
 }
