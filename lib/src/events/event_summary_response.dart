@@ -173,30 +173,3 @@ class Tickets {
   }
 }
 
-class EventStats {
-  String? title;
-  int? value;
-  bool? isAmount;
-
-  EventStats({this.title, this.value, this.isAmount});
-
-  EventStats.fromJson(Map<String, dynamic> json) {
-    if (json["title"] is String) {
-      title = json["title"];
-    }
-    if (json["value"] is int) {
-      value = json["value"];
-    }
-    if (json["is_amount"] is bool) {
-      isAmount = json["is_amount"];
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data["title"] = title;
-    data["value"] = value;
-    data["is_amount"] = isAmount;
-    return data;
-  }
-}

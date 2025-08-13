@@ -4,12 +4,15 @@ library anbocas_tickets_api;
 export 'src/shared/anbocas_api_mode.dart';
 export 'src/shared/anbocas_exception.dart';
 export 'src/shared/anbocas_tickets_config.dart';
+export 'src/shared/anbocas_paginated_response.dart';
+export 'src/shared/anbocas_status_model.dart';
+export 'src/shared/anbocas_status.dart';
 
 // events
 export "src/events/anbocas_events.dart";
 export "src/events/checkin_response.dart";
 export "src/events/event_guests_response.dart";
-export "src/events/event_model.dart";
+export "src/events/models.dart";
 export "src/events/event_summary_response.dart";
 
 // orders

@@ -1,1 +1,5 @@
-enum AnbocasApiMode { sandbox, production, development }
+enum AnbocasApiMode {
+  sandbox,
+  production,
+  development,
+}

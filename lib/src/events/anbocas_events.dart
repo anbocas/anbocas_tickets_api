@@ -6,12 +6,12 @@ import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 
 class AnbocasEvents {
-  Future<List<AnbocasEventModel>?> getEvents({
+  Future<AnbocasPaginatedResponse<List<AnbocasEventModel>>> getEvents({
     int page = 1,
     bool paginate = true,
     String? search,
     int pageLength = 10,
-    String? status,
+    AnbocasStatus? status,
     required String companyId,
   }) async {
     try {
@@ -24,7 +24,7 @@ class AnbocasEvents {
         'search': search,
         'page_length': pageLength,
         'company_id': companyId,
-        'status': status,
+        'status': status?.value,
       };
 
       // Make the API request using RequestClient
@@ -33,14 +33,24 @@ class AnbocasEvents {
         queryParameters: queryParameters,
       );
 
-      if (response.data['data']?["data"] != null) {
-        final events = (response.data['data']["data"] as List)
+      final data = response.data['data'];
+      final statusResponse = response.data['status'];
+
+      if (data["data"] != null && statusResponse != null) {
+        final events = (data["data"] as List)
             .map((e) => AnbocasEventModel.fromJson(e))
             .toList();
-        return events;
-      } else {
-        return [];
+
+        return AnbocasPaginatedResponse(
+          data: events,
+          currentPage: data['current_page'],
+          lastPage: data['last_page'],
+          perPage: data['per_page'],
+          status: AnbocasEventStatusModel.fromMap(statusResponse),
+        );
       }
+
+      throw Exception();
     } catch (e, st) {
       throw AnbocasApiException.fromException(e, st);
     }
@@ -77,9 +87,7 @@ class AnbocasEvents {
     }
   }
 
-  Future<EventSummaryResponse?> getEventSummary({
-    required String eventId,
-  }) async {
+  Future<List<AnbocasEventStatsModel>> getEventSummary(String eventId) async {
     try {
       final dio = AnbocasTicketsConfig.instance.dio;
 
@@ -88,29 +96,13 @@ class AnbocasEvents {
         EventRoutes.getEventSummary(eventId),
       );
 
-      if (response.data['data'] != null) {
-        var eventStats = <EventStats>[];
-        if (response.data['data']['stats'] != null) {
-          eventStats = (response.data['data']['stats'] as List)
-              .map((e) => EventStats.fromJson(e))
-              .toList();
-        }
-
-        var eventOrders = <EventOrders>[];
-        if (response.data['data']['orders'] != null) {
-          eventOrders = (response.data['data']['orders'] as List)
-              .map((e) => EventOrders.fromJson(e))
-              .toList();
-        }
-
-        return EventSummaryResponse(
-            stats: eventStats,
-            orders: eventOrders,
-            message: response.data['message']);
-      } else {
-        return EventSummaryResponse(
-            stats: [], orders: [], message: response.data['message']);
+      if (response.data['data']?['stats'] != null) {
+        return (response.data['data']['stats'] as List)
+            .map((e) => AnbocasEventStatsModel.fromJson(e))
+            .toList();
       }
+
+      return [];
     } catch (e, st) {
       throw AnbocasApiException.fromException(e, st);
     }
@@ -204,7 +196,7 @@ class AnbocasEvents {
     required String longitude,
     required DateTime startDateTime,
     required DateTime endDateTime,
-    required EventLocationType locationType,
+    required AnbocasEventLocationType locationType,
     String? meetingLink,
     bool isPublic = true,
     bool isFree = false,
@@ -215,7 +207,8 @@ class AnbocasEvents {
     String? bannerPath,
   }) async {
     try {
-      if (locationType == EventLocationType.virtual && meetingLink == null) {
+      if (locationType == AnbocasEventLocationType.virtual &&
+          meetingLink == null) {
         throw AnbocasFieldException(
             "Meeting link is required for virtual events");
       }
@@ -315,7 +308,7 @@ class AnbocasEvents {
     DateTime? endDateTime,
     bool? isPublic,
     bool? isFree,
-    EventLocationType? locationType,
+    AnbocasEventLocationType? locationType,
     String? meetingLink,
     bool? groupTicketingAllowed,
     String? commission,
@@ -323,7 +316,7 @@ class AnbocasEvents {
     String? bannerPath,
   }) async {
     try {
-      if (locationType == EventLocationType.virtual &&
+      if (locationType == AnbocasEventLocationType.virtual &&
           (meetingLink == null || meetingLink.isEmpty)) {
         throw AnbocasFieldException(
           "Meeting link is required for virtual events",

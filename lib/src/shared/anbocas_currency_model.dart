@@ -1,12 +1,12 @@
-class Currency {
+class AnbocasCurrencyModel {
   String? id;
   String? name;
   String? code;
   String? symbol;
 
-  Currency({this.id, this.name, this.code, this.symbol});
+  AnbocasCurrencyModel({this.id, this.name, this.code, this.symbol});
 
-  Currency.fromJson(Map<String, dynamic> json) {
+  AnbocasCurrencyModel.fromJson(Map<String, dynamic> json) {
     if (json["id"] is String) {
       id = json["id"];
     }

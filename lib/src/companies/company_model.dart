@@ -1,4 +1,4 @@
-import 'package:anbocas_tickets_api/src/shared/currency_model.dart';
+import 'package:anbocas_tickets_api/src/shared/anbocas_currency_model.dart';
 
 class AnbocasCompanyModel {
   String? id;
@@ -10,7 +10,7 @@ class AnbocasCompanyModel {
   String? logo;
   dynamic parentId;
   String? parentCommission;
-  Currency? currency;
+  AnbocasCurrencyModel? currency;
 
   AnbocasCompanyModel.fromJson(Map<String, dynamic> json) {
     if (json["id"] is String) {
@@ -40,7 +40,7 @@ class AnbocasCompanyModel {
     }
     if (json["currency"] is Map) {
       currency =
-          json["currency"] == null ? null : Currency.fromJson(json["currency"]);
+          json["currency"] == null ? null : AnbocasCurrencyModel.fromJson(json["currency"]);
     }
   }
 

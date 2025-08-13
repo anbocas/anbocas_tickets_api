@@ -17,7 +17,7 @@ class OrderStatus {
     }
     if (json["PENDING"] is int) {
       pending = json["PENDING"];
-    }
+    } 
     if (json["FAILED"] is int) {
       failed = json["FAILED"];
     }

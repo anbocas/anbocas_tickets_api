@@ -9,3 +9,11 @@ abstract final class EventRoutes {
   static String checkInEvent = "/v1/event/checkin";
   static String checkInBulkEvent = "/v1/event/checkin/bulk";
 }
+
+enum AnbocasEventLocationType {
+  virtual("VIRTUAL"),
+  inPerson("IN_PERSON");
+
+  const AnbocasEventLocationType(this.value);
+  final String value;
+}

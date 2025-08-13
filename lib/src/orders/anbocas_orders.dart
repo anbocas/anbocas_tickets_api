@@ -1,7 +1,5 @@
 import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
 import 'package:anbocas_tickets_api/src/orders/constants.dart';
-import 'package:anbocas_tickets_api/src/orders/order_response.dart';
-import 'package:anbocas_tickets_api/src/orders/single_order_data.dart';
 
 class AnbocasOrders {
   // Fetch orders
