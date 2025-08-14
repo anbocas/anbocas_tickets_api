@@ -1,4 +1,4 @@
-abstract final class TicketRoutes {
+abstract final class AnbocasTicketRoutes {
   static String getTicketByEventId(String eventId) =>
       "/v1/ticketsByEvent/$eventId";
   static String createTicket = "/v1/tickets";

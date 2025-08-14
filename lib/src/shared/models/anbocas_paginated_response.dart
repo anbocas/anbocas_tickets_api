@@ -1,6 +1,5 @@
+import 'package:anbocas_tickets_api/src/shared/models/anbocas_status_model.dart';
 import 'package:equatable/equatable.dart';
-
-import 'package:anbocas_tickets_api/src/shared/anbocas_status_model.dart';
 
 class AnbocasPaginatedResponse<T> extends Equatable {
   final T data;

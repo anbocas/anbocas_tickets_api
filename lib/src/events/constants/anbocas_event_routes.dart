@@ -1,4 +1,4 @@
-abstract final class EventRoutes {
+abstract final class AnbocasEventRoutes {
   static String getEvents = "/v1/events";
   static String createEvent = "/v1/events";
   static String getEventDetails(String id) => "/v1/events/$id";
@@ -8,12 +8,4 @@ abstract final class EventRoutes {
   static String getEventSummary(String id) => "/v1/event/$id/summary";
   static String checkInEvent = "/v1/event/checkin";
   static String checkInBulkEvent = "/v1/event/checkin/bulk";
-}
-
-enum AnbocasEventLocationType {
-  virtual("VIRTUAL"),
-  inPerson("IN_PERSON");
-
-  const AnbocasEventLocationType(this.value);
-  final String value;
 }

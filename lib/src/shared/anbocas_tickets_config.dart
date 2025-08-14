@@ -1,4 +1,4 @@
-import 'package:anbocas_tickets_api/src/shared/anbocas_api_mode.dart';
+import 'package:anbocas_tickets_api/src/shared/constants/anbocas_api_mode.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 

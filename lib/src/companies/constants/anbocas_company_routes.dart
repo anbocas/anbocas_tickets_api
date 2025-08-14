@@ -1,4 +1,4 @@
-abstract final class CompanyRoutes {
+abstract final class AnbocasCompanyRoutes {
   static String getEvents = "/v1/events";
   static String getCompanies = "/v1/companies";
   static String getCompanyDetails(String id) => "/v1/companies/$id";

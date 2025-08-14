@@ -1,33 +1,21 @@
 library anbocas_tickets_api;
 
 // shared
-export 'src/shared/anbocas_api_mode.dart';
-export 'src/shared/anbocas_exception.dart';
-export 'src/shared/anbocas_tickets_config.dart';
-export 'src/shared/anbocas_paginated_response.dart';
-export 'src/shared/anbocas_status_model.dart';
-export 'src/shared/anbocas_status.dart';
+export "src/shared/constants/anbocas_api_mode.dart";
+export "src/shared/constants/anbocas_status.dart";
+
+export "src/shared/models/anbocas_currency_model.dart";
+export "src/shared/models/anbocas_paginated_response.dart";
+export "src/shared/models/anbocas_status_model.dart";
+export "src/shared/models/anbocas_ticket_model.dart";
+export "src/shared/models/anbocas_company_model.dart";
+
+export "src/shared/utils/anbocas_exception.dart";
+export "src/shared/anbocas_tickets_config.dart";
 
 // events
-export "src/events/anbocas_events.dart";
-export "src/events/checkin_response.dart";
-export "src/events/event_guests_response.dart";
-export "src/events/models.dart";
-export "src/events/event_summary_response.dart";
+export "src/events/constants/anbocas_event_location_type.dart";
+export "src/events/constants/anbocas_event_routes.dart";
 
-// orders
-export "src/orders/anbocas_orders.dart";
-export "src/orders/order_logs.dart";
-export "src/orders/order_payment.dart";
-export "src/orders/order_response.dart";
-export "src/orders/order_status.dart";
-export "src/orders/order_ticket.dart";
-export "src/orders/single_order_data.dart";
-
-// companies
-export "src/companies/anbocas_companies.dart";
-export "src/companies/company_model.dart";
-export "src/companies/company_request.dart";
-
-// tickets
-export "src/tickets/anbocas_tickets.dart";
+export "src/shared/models/anbocas_event_model.dart";
+export "src/events/models/anbocas_event_stats_model.dart";

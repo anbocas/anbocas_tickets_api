@@ -1,10 +1,9 @@
 import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
-import 'package:anbocas_tickets_api/src/companies/company_model.dart';
-import 'package:anbocas_tickets_api/src/companies/company_request.dart';
-import 'package:anbocas_tickets_api/src/companies/constants.dart';
+import 'package:anbocas_tickets_api/src/companies/constants/anbocas_company_routes.dart';
+import 'package:dio/dio.dart';
 
 class AnbocasCompanies {
-  Future<List<AnbocasCompanyModel>?> getCompanies({
+  Future<AnbocasPaginatedResponse<List<AnbocasCompanyModel>>> getCompanies({
     int page = 1,
     required bool paginate,
     String? search,
@@ -14,7 +13,7 @@ class AnbocasCompanies {
       final dio = AnbocasTicketsConfig.instance.dio;
 
       final response = await dio.get(
-        CompanyRoutes.getCompanies,
+        AnbocasCompanyRoutes.getCompanies,
         queryParameters: {
           'page': page,
           'paginate': paginate,
@@ -23,22 +22,35 @@ class AnbocasCompanies {
         },
       );
 
-      return (response.data['data'] as List)
-          .map((e) => AnbocasCompanyModel.fromJson(e))
-          .toList();
+      final data = response.data['data'];
+      final statusResponse = response.data['status'];
+
+      if (data["data"] != null && statusResponse != null) {
+        final companies = (data["data"] as List)
+            .map((e) => AnbocasCompanyModel.fromJson(e))
+            .toList();
+
+        return AnbocasPaginatedResponse(
+          data: companies,
+          currentPage: data['current_page'],
+          lastPage: data['last_page'],
+          perPage: data['per_page'],
+          status: AnbocasStatusModel.fromMap(statusResponse),
+        );
+      }
+
+      throw Exception();
     } catch (e, st) {
       throw AnbocasApiException.fromException(e, st);
     }
   }
 
-  Future<AnbocasCompanyModel?> details({
-    required String companyId,
-  }) async {
+  Future<AnbocasCompanyModel> getCompany(String companyId) async {
     try {
       final dio = AnbocasTicketsConfig.instance.dio;
 
       final response = await dio.get(
-        CompanyRoutes.getCompanyDetails(companyId),
+        AnbocasCompanyRoutes.getCompanyDetails(companyId),
       );
 
       if (response.statusCode == 200) {
@@ -51,13 +63,57 @@ class AnbocasCompanies {
     }
   }
 
-  Future<AnbocasCompanyModel?> createCompany(CreateCompanyRequest req) async {
+  Future<AnbocasCompanyModel> createCompany({
+    required String name,
+    required String currencyId,
+    String brandColor = "#000000",
+    String? website,
+    String? location,
+    String? phone,
+    String? taxId,
+    String? supportPhone,
+    String? supportEmail,
+    String? parentCommission,
+    String? parentId,
+    String? bannerFilePath,
+    String? logoFilePath,
+    String? description,
+  }) async {
     try {
-      var formData = await req.toJson();
+      MultipartFile? logo;
+      MultipartFile? banner;
+
+      if (logoFilePath != null) {
+        logo = await MultipartFile.fromFile(
+          logoFilePath,
+          filename: bannerFilePath?.split('/').last,
+        );
+      }
+      if (bannerFilePath != null) {
+        banner = await MultipartFile.fromFile(bannerFilePath,
+            filename: bannerFilePath.split('/').last);
+      }
+
+      final formData = FormData.fromMap({
+        'logo': logo,
+        'banner': banner,
+        'name': name,
+        'website': website,
+        'location': location,
+        'phone': phone,
+        'tax_id': taxId,
+        'currency_id': currencyId,
+        'brand_color': brandColor,
+        'support_phone': supportPhone,
+        'support_email': supportEmail,
+        'parent_comission': parentCommission,
+        'parent_id': parentId,
+      });
+
       final dio = AnbocasTicketsConfig.instance.dio;
 
       final response = await dio.post(
-        CompanyRoutes.createCompany,
+        AnbocasCompanyRoutes.createCompany,
         data: formData,
       );
 
@@ -78,7 +134,7 @@ class AnbocasCompanies {
       final dio = AnbocasTicketsConfig.instance.dio;
 
       final response = await dio.delete(
-        CompanyRoutes.deleteCompany(companyId),
+        AnbocasCompanyRoutes.deleteCompany(companyId),
       );
 
       if (response.statusCode == 200) {
@@ -91,12 +147,46 @@ class AnbocasCompanies {
     }
   }
 
-  Future<AnbocasCompanyModel?> updateCompany(UpdateCompanyRequest req) async {
+  Future<AnbocasCompanyModel?> updateCompany({
+    required String companyId,
+    String? name,
+    String? description,
+    String? website,
+    String? location,
+    String? latitude,
+    String? longitude,
+    String? startDate,
+    String? endDate,
+    String? bannerFilePath,
+  }) async {
     try {
       final dio = AnbocasTicketsConfig.instance.dio;
-      var formData = await req.toJson();
+
+      MultipartFile? banner;
+      if (bannerFilePath != null) {
+        banner = await MultipartFile.fromFile(bannerFilePath,
+            filename: bannerFilePath.split('/').last);
+      }
+      var formData = FormData();
+
+      if (name != null) formData.fields.add(MapEntry('name', name));
+      if (description != null) {
+        formData.fields.add(MapEntry('description', description));
+      }
+      if (website != null) formData.fields.add(MapEntry('website', website));
+      if (location != null) formData.fields.add(MapEntry('location', location));
+      if (latitude != null) formData.fields.add(MapEntry('latitude', latitude));
+      if (longitude != null) {
+        formData.fields.add(MapEntry('longitude', longitude));
+      }
+      if (startDate != null) {
+        formData.fields.add(MapEntry('start_date', startDate));
+      }
+      if (endDate != null) formData.fields.add(MapEntry('end_date', endDate));
+      if (banner != null) formData.files.add(MapEntry('banner', banner));
+
       final response = await dio.put(
-        CompanyRoutes.updateCompany(req.companyId),
+        AnbocasCompanyRoutes.updateCompany(companyId),
         data: formData,
       );
 

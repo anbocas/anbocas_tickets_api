@@ -1,9 +1,9 @@
 import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
-import 'package:anbocas_tickets_api/src/orders/constants.dart';
+import 'package:anbocas_tickets_api/src/orders/constants/anbocas_order_routes.dart';
+import 'package:anbocas_tickets_api/src/orders/models/anbocas_order_model.dart';
 
 class AnbocasOrders {
-  // Fetch orders
-  Future<OrderResponse?> getOrders({
+  Future<AnbocasPaginatedResponse<List<AnbocasOrderModel>>> getOrders({
     required String companyId,
     int page = 1,
     bool paginate = true,
@@ -12,39 +12,49 @@ class AnbocasOrders {
     try {
       final dio = AnbocasTicketsConfig.instance.dio;
 
-      var queryParameters = {
-        'company_id': companyId,
-        'paginate': paginate,
-        'page': page,
-        'page_length': pageLength,
-      };
-
       final response = await dio.get(
-        OrderRoutes.getOrders,
-        queryParameters: queryParameters,
+        AnbocasOrderRoutes.getOrders,
+        queryParameters: {
+          'company_id': companyId,
+          'paginate': paginate,
+          'page': page,
+          'page_length': pageLength,
+        },
       );
 
-      if (response.statusCode == 200) {
-        return OrderResponse.fromJson(response.data);
-      } else {
-        throw Exception("Failed to fetch orders: ${response.statusMessage}");
+      final data = response.data['data'];
+      final statusResponse = response.data['status'];
+
+      if (data["data"] != null && statusResponse != null) {
+        final orders = (data["data"] as List)
+            .map((e) => AnbocasOrderModel.fromJson(e))
+            .toList();
+
+        return AnbocasPaginatedResponse(
+          data: orders,
+          currentPage: data['current_page'],
+          lastPage: data['last_page'],
+          perPage: data['per_page'],
+          status: AnbocasStatusModel.fromMap(statusResponse),
+        );
       }
+
+      throw Exception();
     } catch (e, st) {
       throw AnbocasApiException.fromException(e, st);
     }
   }
 
-  // Get specific order
-  Future<SingleOrderData?> getOrderDetails(String orderId) async {
+  Future<AnbocasOrderModel?> getOrder(String orderId) async {
     try {
       final dio = AnbocasTicketsConfig.instance.dio;
 
       final response = await dio.get(
-        OrderRoutes.getOrderDetails(orderId),
+        AnbocasOrderRoutes.getOrderDetails(orderId),
       );
 
       if (response.statusCode == 200) {
-        return SingleOrderData.fromJson(response.data['data']);
+        return AnbocasOrderModel.fromJson(response.data['data']);
       } else {
         throw Exception("Failed to fetch order: ${response.statusMessage}");
       }
@@ -57,7 +67,7 @@ class AnbocasOrders {
     try {
       final dio = AnbocasTicketsConfig.instance.dio;
       final response = await dio.post(
-        OrderRoutes.cancelOrder,
+        AnbocasOrderRoutes.cancelOrder,
         data: {
           'order_id': orderId,
         },
@@ -77,7 +87,7 @@ class AnbocasOrders {
     try {
       final dio = AnbocasTicketsConfig.instance.dio;
       final response = await dio.post(
-        OrderRoutes.verifyOrderPayment,
+        AnbocasOrderRoutes.verifyOrderPayment,
         data: {
           'razorpay_payment_id': razorpayPaymentId,
         },

@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
-import 'package:anbocas_tickets_api/src/events/constants.dart';
+import 'package:anbocas_tickets_api/src/events/models/anbocas_checkin_response_model.dart';
+import 'package:anbocas_tickets_api/src/events/models/anbocas_event_guests_model.dart';
 import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 
@@ -17,20 +18,16 @@ class AnbocasEvents {
     try {
       final dio = AnbocasTicketsConfig.instance.dio;
 
-      // Set up query parameters
-      Map<String, dynamic> queryParameters = {
-        'page': page,
-        'paginate': paginate,
-        'search': search,
-        'page_length': pageLength,
-        'company_id': companyId,
-        'status': status?.value,
-      };
-
-      // Make the API request using RequestClient
       final response = await dio.get(
-        EventRoutes.getEvents,
-        queryParameters: queryParameters,
+        AnbocasEventRoutes.getEvents,
+        queryParameters: {
+          'page': page,
+          'paginate': paginate,
+          'search': search,
+          'page_length': pageLength,
+          'company_id': companyId,
+          'status': status?.value,
+        },
       );
 
       final data = response.data['data'];
@@ -46,7 +43,7 @@ class AnbocasEvents {
           currentPage: data['current_page'],
           lastPage: data['last_page'],
           perPage: data['per_page'],
-          status: AnbocasEventStatusModel.fromMap(statusResponse),
+          status: AnbocasStatusModel.fromMap(statusResponse),
         );
       }
 
@@ -56,7 +53,26 @@ class AnbocasEvents {
     }
   }
 
-  Future<EventGuestsResponse?> getGuests({
+  Future<AnbocasEventModel?> getEvent(String eventId) async {
+    try {
+      final dio = AnbocasTicketsConfig.instance.dio;
+
+      // Make the API request using RequestClient
+      final response = await dio.get(
+        AnbocasEventRoutes.getEventDetails(eventId),
+      );
+
+      if (response.data['data'] != null) {
+        return AnbocasEventModel.fromJson(response.data['data']);
+      } else {
+        return null;
+      }
+    } catch (e, st) {
+      throw AnbocasApiException.fromException(e, st);
+    }
+  }
+
+  Future<AnbocasPaginatedResponse<List<AnbocasEventGuestsModel>>> getGuests({
     required String eventId,
     int page = 1,
     bool paginate = false,
@@ -66,22 +82,34 @@ class AnbocasEvents {
     try {
       final dio = AnbocasTicketsConfig.instance.dio;
 
-      // Set up query parameters
-      Map<String, dynamic> queryParameters = {
-        'page': page,
-        'search': search,
-        'paginate': paginate,
-        'page_length': pageLength,
-      };
-
-      // Make the API request using RequestClient
       final response = await dio.get(
-        EventRoutes.getEventGuests(eventId),
-        queryParameters: queryParameters,
+        AnbocasEventRoutes.getEventGuests(eventId),
+        queryParameters: {
+          'page': page,
+          'search': search,
+          'paginate': paginate,
+          'page_length': pageLength,
+        },
       );
 
-      // Return the response data
-      return EventGuestsResponse.fromJson(response.data);
+      final data = response.data['data'];
+      final statusResponse = response.data['status'];
+
+      if (data["data"] != null && statusResponse != null) {
+        final eventGuests = (data["data"] as List)
+            .map((e) => AnbocasEventGuestsModel.fromJson(e))
+            .toList();
+
+        return AnbocasPaginatedResponse(
+          data: eventGuests,
+          currentPage: data['current_page'],
+          lastPage: data['last_page'],
+          perPage: data['per_page'],
+          status: AnbocasStatusModel.fromMap(statusResponse),
+        );
+      }
+
+      throw Exception();
     } catch (e, st) {
       throw AnbocasApiException.fromException(e, st);
     }
@@ -91,9 +119,8 @@ class AnbocasEvents {
     try {
       final dio = AnbocasTicketsConfig.instance.dio;
 
-      // Make the API request using RequestClient
       final response = await dio.get(
-        EventRoutes.getEventSummary(eventId),
+        AnbocasEventRoutes.getEventSummary(eventId),
       );
 
       if (response.data['data']?['stats'] != null) {
@@ -108,27 +135,6 @@ class AnbocasEvents {
     }
   }
 
-  Future<AnbocasEventModel?> getEventDetails({
-    required String eventId,
-  }) async {
-    try {
-      final dio = AnbocasTicketsConfig.instance.dio;
-
-      // Make the API request using RequestClient
-      final response = await dio.get(
-        EventRoutes.getEventDetails(eventId),
-      );
-
-      if (response.data['data'] != null) {
-        return AnbocasEventModel.fromJson(response.data['data']);
-      } else {
-        return null;
-      }
-    } catch (e, st) {
-      throw AnbocasApiException.fromException(e, st);
-    }
-  }
-
   Future<bool> bulkCheckIn({
     required String eventId,
     required List<String> codes,
@@ -136,9 +142,8 @@ class AnbocasEvents {
     try {
       final dio = AnbocasTicketsConfig.instance.dio;
 
-      // Make the API request using RequestClient
       final response = await dio.post(
-        EventRoutes.checkInBulkEvent,
+        AnbocasEventRoutes.checkInBulkEvent,
         data: {
           "event_id": eventId,
           "codes": codes,
@@ -155,32 +160,39 @@ class AnbocasEvents {
     }
   }
 
-  Future<CheckInResponse?> checkIn({
+  Future<AnbocasCheckinResponseModel> checkInEvent({
     required String eventId,
     required String code,
   }) async {
     try {
       final dio = AnbocasTicketsConfig.instance.dio;
 
-      // Make the API request using RequestClient
       final response = await dio.post(
-        EventRoutes.checkInEvent,
+        AnbocasEventRoutes.checkInEvent,
         data: {
           "event_id": eventId,
           "code": code,
         },
       );
 
-      var data = CheckInResponse.fromJson(response.data);
-      data.statusCode = response.statusCode!;
-
-      return data;
+      return AnbocasCheckinResponseModel(
+        message: response.data["message"],
+        name: response.data["name"],
+        statusCode: response.statusCode!,
+        ticketModel: response.data["ticket"] != null
+            ? AnbocasTicketModel.fromJson(response.data["ticket"])
+            : null,
+      );
     } on DioException catch (error) {
       // Handle errors
-      var data = CheckInResponse.fromJson(error.response?.data);
-      data.statusCode = 400;
-
-      return data;
+      return AnbocasCheckinResponseModel(
+        message: error.response?.data["message"],
+        name: error.response?.data["name"],
+        statusCode: 400,
+        ticketModel: error.response?.data["ticket"] != null
+            ? AnbocasTicketModel.fromJson(error.response?.data["ticket"])
+            : null,
+      );
     }
   }
 
@@ -257,7 +269,7 @@ class AnbocasEvents {
 
       // Make the API request
       final response = await dio.post(
-        EventRoutes.createEvent,
+        AnbocasEventRoutes.createEvent,
         data: formData,
       );
 
@@ -271,7 +283,7 @@ class AnbocasEvents {
     }
   }
 
-  Future<bool> delete({
+  Future<bool> deleteEvent({
     required String eventId,
     required String eventName,
   }) async {
@@ -279,7 +291,7 @@ class AnbocasEvents {
       final dio = AnbocasTicketsConfig.instance.dio;
 
       final response = await dio.delete(
-        EventRoutes.deleteEvent(eventId),
+        AnbocasEventRoutes.deleteEvent(eventId),
         data: {"name": eventName},
       );
 
@@ -401,7 +413,7 @@ class AnbocasEvents {
 
       // Make the API request
       final response = await dio.post(
-        EventRoutes.updateEvent(eventId),
+        AnbocasEventRoutes.updateEvent(eventId),
         data: formData,
       );
 

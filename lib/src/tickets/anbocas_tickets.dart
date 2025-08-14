@@ -1,9 +1,9 @@
 import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
-import 'package:anbocas_tickets_api/src/tickets/constants.dart';
+import 'package:anbocas_tickets_api/src/tickets/constants/anbocas_ticket_routes.dart';
 import 'package:dio/dio.dart';
 
 class AnbocasTickets {
-  Future<dynamic> getTickets({
+  Future<AnbocasPaginatedResponse<List<AnbocasTicketModel>>> getTickets({
     required String eventId,
     int page = 1,
     bool paginate = true,
@@ -14,37 +14,50 @@ class AnbocasTickets {
     try {
       final dio = AnbocasTicketsConfig.instance.dio;
 
-      // Set up query parameters
-      Map<String, dynamic> queryParameters = {
-        'page': page,
-        'paginate': paginate,
-        'search': search,
-        'page_length': pageLength,
-        'status': status,
-      };
-
-      // Make the API request using RequestClient
       final response = await dio.get(
-        TicketRoutes.getTicketByEventId(eventId),
-        queryParameters: queryParameters,
+        AnbocasTicketRoutes.getTicketByEventId(eventId),
+        queryParameters: {
+          'page': page,
+          'paginate': paginate,
+          'search': search,
+          'page_length': pageLength,
+          'status': status,
+        },
       );
 
-      // Return the response data
-      return response.data;
+      final data = response.data['data'];
+      final statusResponse = response.data['status'];
+
+      if (data["data"] != null && statusResponse != null) {
+        final tickets = (data["data"] as List)
+            .map((e) => AnbocasTicketModel.fromJson(e))
+            .toList();
+
+        return AnbocasPaginatedResponse(
+          data: tickets,
+          currentPage: data['current_page'],
+          lastPage: data['last_page'],
+          perPage: data['per_page'],
+          status: AnbocasStatusModel.fromMap(statusResponse),
+        );
+      }
+
+      throw Exception();
     } catch (e, st) {
       throw AnbocasApiException.fromException(e, st);
     }
   }
 
-  Future<dynamic> createTicket(
-      {required String eventId,
-      required String name,
-      String? description,
-      required String capacity,
-      required String price,
-      required String availableFrom,
-      required String availableTo,
-      required String status}) async {
+  Future<dynamic> createTicket({
+    required String eventId,
+    required String name,
+    String? description,
+    required String capacity,
+    required String price,
+    required String availableFrom,
+    required String availableTo,
+    required String status,
+  }) async {
     try {
       final dio = AnbocasTicketsConfig.instance.dio;
 
@@ -60,7 +73,7 @@ class AnbocasTickets {
       });
 
       final response = await dio.post(
-        TicketRoutes.createTicket,
+        AnbocasTicketRoutes.createTicket,
         data: data,
       );
 
@@ -80,7 +93,7 @@ class AnbocasTickets {
     try {
       final dio = AnbocasTicketsConfig.instance.dio;
       final response = await dio.delete(
-        TicketRoutes.deleteTicket(ticketId),
+        AnbocasTicketRoutes.deleteTicket(ticketId),
       );
 
       if (response.statusCode == 200) {
@@ -99,7 +112,7 @@ class AnbocasTickets {
     try {
       final dio = AnbocasTicketsConfig.instance.dio;
       final response = await dio.get(
-        TicketRoutes.getTicketById(ticketId),
+        AnbocasTicketRoutes.getTicketById(ticketId),
       );
 
       if (response.statusCode == 200) {
@@ -136,7 +149,7 @@ class AnbocasTickets {
       if (status != null) data['status'] = status;
 
       final response = await dio.put(
-        TicketRoutes.updateTicket(ticketId),
+        AnbocasTicketRoutes.updateTicket(ticketId),
         data: data,
       );
 

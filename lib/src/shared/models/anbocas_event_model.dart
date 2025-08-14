@@ -1,9 +1,6 @@
-import 'dart:convert';
+import 'package:equatable/equatable.dart';
 
 import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
-import 'package:anbocas_tickets_api/src/events/constants.dart';
-import 'package:anbocas_tickets_api/src/shared/ticket_model.dart';
-import 'package:equatable/equatable.dart';
 
 class AnbocasEventModel extends Equatable {
   final String? id;
@@ -18,7 +15,7 @@ class AnbocasEventModel extends Equatable {
   final String? location;
   final double? latitude;
   final double? longitude;
-  final String? locationType;
+  final AnbocasEventLocationType? locationType;
   final String? meetingLink;
   final String? startDate;
   final String? endDate;
@@ -35,7 +32,7 @@ class AnbocasEventModel extends Equatable {
   final String? referenceId;
 
   // only available or get when call or view the event details
-  final List<TicketModel> tickets;
+  final List<AnbocasTicketModel> tickets;
   final AnbocasCompanyModel? company;
 
   const AnbocasEventModel({
@@ -117,7 +114,7 @@ class AnbocasEventModel extends Equatable {
       venue: json["venue"],
       latitude: json["latitude"],
       longitude: json["longitude"],
-      locationType: json["location_type"],
+      locationType: AnbocasEventLocationType.fromValue(json["location_type"]),
       meetingLink: json["meeting_link"],
       startDate: json["start_date"],
       endDate: json["end_date"],
@@ -138,7 +135,7 @@ class AnbocasEventModel extends Equatable {
       tickets: json["tickets"] != null
           ? (json["tickets"] as List)
               .map(
-                (e) => TicketModel.fromJson(e),
+                (e) => AnbocasTicketModel.fromJson(e),
               )
               .toList()
           : [],
@@ -178,114 +175,68 @@ class AnbocasEventModel extends Equatable {
     };
   }
 
-  AnbocasEventLocationType getLocationType() {
-    if (locationType == "VIRTUAL") {
-      return AnbocasEventLocationType.virtual;
-    } else {
-      return AnbocasEventLocationType.inPerson;
-    }
-  }
-}
-
-class AnbocasEventStatusModel extends AnbocasStatusModel {
-  final int all;
-  final int published;
-  final int draft;
-  final int cancelled;
-  final int deleted;
-
-  const AnbocasEventStatusModel({
-    required this.all,
-    required this.published,
-    required this.draft,
-    required this.cancelled,
-    required this.deleted,
-  });
-
-  AnbocasEventStatusModel copyWith({
-    int? all,
-    int? published,
-    int? draft,
-    int? cancelled,
-    int? deleted,
+  AnbocasEventModel copyWith({
+    String? id,
+    String? categoryId,
+    String? companyId,
+    String? name,
+    String? slug,
+    String? imageUrl,
+    String? description,
+    String? website,
+    String? venue,
+    String? location,
+    double? latitude,
+    double? longitude,
+    AnbocasEventLocationType? locationType,
+    String? meetingLink,
+    String? startDate,
+    String? endDate,
+    int? isBookingOpen,
+    int? isFree,
+    int? isPublic,
+    int? absorbPlatformFee,
+    int? groupTicketingAllowed,
+    String? status,
+    String? createdBy,
+    String? createdAt,
+    String? updatedAt,
+    bool? isExpired,
+    String? referenceId,
+    List<AnbocasTicketModel>? tickets,
+    AnbocasCompanyModel? company,
   }) {
-    return AnbocasEventStatusModel(
-      all: all ?? this.all,
-      published: published ?? this.published,
-      draft: draft ?? this.draft,
-      cancelled: cancelled ?? this.cancelled,
-      deleted: deleted ?? this.deleted,
+    return AnbocasEventModel(
+      id: id ?? this.id,
+      categoryId: categoryId ?? this.categoryId,
+      companyId: companyId ?? this.companyId,
+      name: name ?? this.name,
+      slug: slug ?? this.slug,
+      imageUrl: imageUrl ?? this.imageUrl,
+      description: description ?? this.description,
+      website: website ?? this.website,
+      venue: venue ?? this.venue,
+      location: location ?? this.location,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      locationType: locationType ?? this.locationType,
+      meetingLink: meetingLink ?? this.meetingLink,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      isBookingOpen: isBookingOpen ?? this.isBookingOpen,
+      isFree: isFree ?? this.isFree,
+      isPublic: isPublic ?? this.isPublic,
+      absorbPlatformFee: absorbPlatformFee ?? this.absorbPlatformFee,
+      groupTicketingAllowed:
+          groupTicketingAllowed ?? this.groupTicketingAllowed,
+      status: status ?? this.status,
+      createdBy: createdBy ?? this.createdBy,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      isExpired: isExpired ?? this.isExpired,
+      referenceId: referenceId ?? this.referenceId,
+      tickets: tickets ?? this.tickets,
+      company: company ?? this.company,
     );
-  }
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'ALL': all,
-      'PUBLISHED': published,
-      'DRAFT': draft,
-      'CANCELLED': cancelled,
-      'DELETED': deleted,
-    };
-  }
-
-  factory AnbocasEventStatusModel.fromMap(Map<String, dynamic> map) {
-    return AnbocasEventStatusModel(
-      all: map['ALL'] as int,
-      published: map['PUBLISHED'] as int,
-      draft: map['DRAFT'] as int,
-      cancelled: map['CANCELLED'] as int,
-      deleted: map['DELETED'] as int,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory AnbocasEventStatusModel.fromJson(String source) =>
-      AnbocasEventStatusModel.fromMap(
-          json.decode(source) as Map<String, dynamic>);
-
-  @override
-  bool get stringify => true;
-
-  @override
-  List<Object> get props {
-    return [
-      all,
-      published,
-      draft,
-      cancelled,
-      deleted,
-    ];
-  }
-}
-
-class AnbocasEventStatsModel extends Equatable {
-  final String? title;
-  final int? value;
-  final bool? isAmount;
-
-  const AnbocasEventStatsModel({
-    this.title,
-    this.value,
-    this.isAmount,
-  });
-
-  @override
-  List<Object?> get props => [];
-
-  factory AnbocasEventStatsModel.fromJson(Map<String, dynamic> json) {
-    return AnbocasEventStatsModel(
-      title: json["title"],
-      value: json["value"],
-      isAmount: json["is_amount"],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      "title": title,
-      "value": value,
-      "is_amount": isAmount,
-    };
   }
 }
