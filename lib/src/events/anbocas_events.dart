@@ -1,8 +1,7 @@
 import 'dart:io';
 
 import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
-import 'package:anbocas_tickets_api/src/events/models/anbocas_checkin_response_model.dart';
-import 'package:anbocas_tickets_api/src/events/models/anbocas_event_guests_model.dart';
+import 'package:anbocas_tickets_api/src/events/constants/anbocas_event_routes.dart';
 import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 
@@ -12,7 +11,7 @@ class AnbocasEvents {
     bool paginate = true,
     String? search,
     int pageLength = 10,
-    AnbocasStatus? status,
+    AnbocasEventStatus? status,
     required String companyId,
   }) async {
     try {

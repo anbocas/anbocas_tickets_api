@@ -1,5 +1,6 @@
 import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
 import 'package:anbocas_tickets_api/src/tickets/constants/anbocas_ticket_routes.dart';
+import 'package:anbocas_tickets_api/src/tickets/constants/anbocas_ticket_status.dart';
 import 'package:dio/dio.dart';
 
 class AnbocasTickets {
@@ -56,7 +57,7 @@ class AnbocasTickets {
     required String price,
     required String availableFrom,
     required String availableTo,
-    required String status,
+    required AnbocasTicketStatus status,
   }) async {
     try {
       final dio = AnbocasTicketsConfig.instance.dio;
@@ -69,7 +70,7 @@ class AnbocasTickets {
         'price': price,
         'available_from': availableFrom,
         'available_to': availableTo,
-        'status': status
+        'status': status.value,
       });
 
       final response = await dio.post(
@@ -87,9 +88,7 @@ class AnbocasTickets {
     }
   }
 
-  Future<bool> deleteTicket({
-    required String ticketId,
-  }) async {
+  Future<bool> deleteTicket(String ticketId) async {
     try {
       final dio = AnbocasTicketsConfig.instance.dio;
       final response = await dio.delete(
@@ -106,9 +105,7 @@ class AnbocasTickets {
     }
   }
 
-  Future<dynamic> getTicketById({
-    required String ticketId,
-  }) async {
+  Future<dynamic> getTicketById(String ticketId) async {
     try {
       final dio = AnbocasTicketsConfig.instance.dio;
       final response = await dio.get(
@@ -125,16 +122,17 @@ class AnbocasTickets {
     }
   }
 
-  Future<dynamic> updateTicket(
-      {required String ticketId,
-      String? eventId,
-      String? name,
-      String? description,
-      String? capacity,
-      String? price,
-      String? availableFrom,
-      String? availableTo,
-      String? status}) async {
+  Future<dynamic> updateTicket({
+    required String ticketId,
+    String? eventId,
+    String? name,
+    String? description,
+    String? capacity,
+    String? price,
+    String? availableFrom,
+    String? availableTo,
+    AnbocasTicketStatus? status,
+  }) async {
     try {
       final dio = AnbocasTicketsConfig.instance.dio;
       Map<String, dynamic> data = {};
@@ -146,7 +144,7 @@ class AnbocasTickets {
       if (price != null) data['price'] = price;
       if (availableFrom != null) data['available_from'] = availableFrom;
       if (availableTo != null) data['available_to'] = availableTo;
-      if (status != null) data['status'] = status;
+      if (status != null) data['status'] = status.value;
 
       final response = await dio.put(
         AnbocasTicketRoutes.updateTicket(ticketId),

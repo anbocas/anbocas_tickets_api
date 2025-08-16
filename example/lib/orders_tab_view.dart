@@ -18,7 +18,7 @@ class _OrdersTabViewState extends State<OrdersTabView> {
       );
     }
 
-    final orders = _orderResponse?.data??[];
+    final orders = _ordersResponse?.data ?? [];
 
     return RefreshIndicator(
       onRefresh: () async => getOrders(),
@@ -27,8 +27,8 @@ class _OrdersTabViewState extends State<OrdersTabView> {
         itemBuilder: (context, index) {
           // final event = _events[index];
           return ListTile(
-            // title: Text(event.name ?? 'N/A'),
-          );
+              // title: Text(event.name ?? 'N/A'),
+              );
         },
       ),
     );
@@ -36,7 +36,7 @@ class _OrdersTabViewState extends State<OrdersTabView> {
 
   final _anbocasOrders = AnbocasOrders();
   bool _isLoading = false;
-  OrderResponse? _orderResponse;
+  AnbocasPaginatedResponse<List<AnbocasOrderModel>>? _ordersResponse;
 
   @override
   void initState() {
@@ -48,7 +48,7 @@ class _OrdersTabViewState extends State<OrdersTabView> {
     setState(() {
       _isLoading = true;
     });
-    _orderResponse = await _anbocasOrders.getOrders(companyId: kCompanyId);
+    _ordersResponse = await _anbocasOrders.getOrders(companyId: kCompanyId);
     setState(() {
       _isLoading = false;
     });

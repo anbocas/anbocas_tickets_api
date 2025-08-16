@@ -3,16 +3,16 @@ import 'package:equatable/equatable.dart';
 
 class AnbocasPaginatedResponse<T> extends Equatable {
   final T data;
-  final int currentPage;
-  final int lastPage;
-  final int perPage;
+  final int? currentPage;
+  final int? lastPage;
+  final int? perPage;
   final AnbocasStatusModel status;
 
   const AnbocasPaginatedResponse({
     required this.data,
-    required this.currentPage,
-    required this.lastPage,
-    required this.perPage,
+    this.currentPage,
+    this.lastPage,
+    this.perPage,
     required this.status,
   });
 

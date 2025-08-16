@@ -1,3 +1,4 @@
+import 'package:anbocas_tickets_api/src/shared/utils/data_serializer.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
@@ -24,7 +25,7 @@ class AnbocasEventModel extends Equatable {
   final int? isPublic;
   final int? absorbPlatformFee;
   final int? groupTicketingAllowed;
-  final String? status;
+  final AnbocasEventStatus? status;
   final String? createdBy;
   final String? createdAt;
   final String? updatedAt;
@@ -112,18 +113,19 @@ class AnbocasEventModel extends Equatable {
       location: json["location"],
       website: json["website"],
       venue: json["venue"],
-      latitude: json["latitude"],
-      longitude: json["longitude"],
+      latitude: DataSerializer.toDouble(json["latitude"]),
+      longitude: DataSerializer.toDouble(json["longitude"]),
       locationType: AnbocasEventLocationType.fromValue(json["location_type"]),
       meetingLink: json["meeting_link"],
       startDate: json["start_date"],
       endDate: json["end_date"],
-      isBookingOpen: json["is_booking_open"],
-      isFree: json["is_free"],
-      isPublic: json["is_public"],
-      absorbPlatformFee: json["absorb_platform_fee"],
-      groupTicketingAllowed: json["group_ticketing_allowed"],
-      status: json["status"],
+      isBookingOpen: DataSerializer.toInt(json["is_booking_open"]),
+      isFree: DataSerializer.toInt(json["is_free"]),
+      isPublic: DataSerializer.toInt(json["is_public"]),
+      absorbPlatformFee: DataSerializer.toInt(json["absorb_platform_fee"]),
+      groupTicketingAllowed:
+          DataSerializer.toInt(json["group_ticketing_allowed"]),
+      status: AnbocasEventStatus.fromValue(json["status"]),
       createdBy: json["created_by"],
       createdAt: json["created_at"],
       updatedAt: json["updated_at"],
@@ -197,7 +199,7 @@ class AnbocasEventModel extends Equatable {
     int? isPublic,
     int? absorbPlatformFee,
     int? groupTicketingAllowed,
-    String? status,
+    AnbocasEventStatus? status,
     String? createdBy,
     String? createdAt,
     String? updatedAt,

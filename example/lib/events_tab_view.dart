@@ -1,4 +1,5 @@
 import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
+import 'package:example/event_form_screen.dart';
 import 'package:example/main.dart';
 import 'package:flutter/material.dart';
 
@@ -23,18 +24,54 @@ class _EventsTabViewState extends State<EventsTabView> {
     return Column(
       children: [
         Expanded(
-          child: RefreshIndicator(
-            onRefresh: () async => getEvents(true),
-            child: ListView.builder(
-              itemCount: events.length,
-              itemBuilder: (context, index) {
-                final event = events[index];
-                return ListTile(
-                  onTap: () {},
-                  title: Text(event.name ?? 'N/A'),
-                );
-              },
-            ),
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: RefreshIndicator(
+                  onRefresh: () async => getEvents(true),
+                  child: ListView.builder(
+                    itemCount: events.length,
+                    itemBuilder: (context, index) {
+                      final event = events[index];
+                      return ListTile(
+                        onTap: () {},
+                        title: Text(event.name ?? 'N/A'),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                EventFormScreen.navigate(context, event);
+                              },
+                              icon: const Icon(Icons.edit),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                _anbocasEvents.deleteEvent(
+                                  eventId: event.id ?? '',
+                                  eventName: event.name ?? '',
+                                );
+                              },
+                              icon: const Icon(Icons.delete),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              Positioned(
+                right: 16,
+                bottom: 20,
+                child: FloatingActionButton(
+                  onPressed: () {
+                    EventFormScreen.navigate(context);
+                  },
+                  child: const Icon(Icons.create),
+                ),
+              )
+            ],
           ),
         ),
         MaterialButton(
@@ -42,8 +79,9 @@ class _EventsTabViewState extends State<EventsTabView> {
           minWidth: double.infinity,
           textColor: Colors.white,
           onPressed: () {
-            if (_eventsResponse != null &&
-                _eventsResponse!.currentPage >= _eventsResponse!.lastPage) {
+            if (_eventsResponse?.currentPage != null &&
+                _eventsResponse?.lastPage != null &&
+                _eventsResponse!.currentPage! >= _eventsResponse!.lastPage!) {
               ScaffoldMessenger.maybeOf(context)?.showSnackBar(
                   const SnackBar(content: Text('Nothing to load.')));
             } else {
@@ -80,7 +118,7 @@ class _EventsTabViewState extends State<EventsTabView> {
       final prevEventsResponse = _eventsResponse;
       _eventsResponse = await _anbocasEvents.getEvents(
         companyId: kCompanyId,
-        page: _eventsResponse!.currentPage + 1,
+        page: (_eventsResponse!.currentPage ?? 0) + 1,
         pageLength: 1,
       );
 

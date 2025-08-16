@@ -1,4 +1,4 @@
-enum AnbocasStatus {
+enum AnbocasEventStatus {
   published('PUBLISHED'),
   unpublished('UNPUBLISHED'),
   draft('DRAFT'),
@@ -7,9 +7,9 @@ enum AnbocasStatus {
 
   final String value;
 
-  const AnbocasStatus(this.value);
+  const AnbocasEventStatus(this.value);
 
-  factory AnbocasStatus.fromValue(value) {
+  factory AnbocasEventStatus.fromValue(value) {
     return values.firstWhere((element) => element.value == value);
   }
 }

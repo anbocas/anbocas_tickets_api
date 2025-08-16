@@ -1,3 +1,4 @@
+import 'package:anbocas_tickets_api/src/tickets/constants/anbocas_ticket_status.dart';
 import 'package:equatable/equatable.dart';
 
 class AnbocasTicketModel extends Equatable {
@@ -10,7 +11,7 @@ class AnbocasTicketModel extends Equatable {
   final int? available;
   final dynamic availableFrom;
   final dynamic availableTo;
-  final String? status;
+  final AnbocasTicketStatus? status;
   final String? createdAt;
   final String? updatedAt;
   final String? formattedPrice;
@@ -59,7 +60,9 @@ class AnbocasTicketModel extends Equatable {
       available: json["available"],
       availableFrom: json["available_from"],
       availableTo: json["available_to"],
-      status: json["status"],
+      status: json["status"] != null
+          ? AnbocasTicketStatus.fromValue(json['status'])
+          : null,
       createdAt: json["created_at"],
       updatedAt: json["updated_at"],
       formattedPrice: json["formatted_price"],
@@ -77,7 +80,7 @@ class AnbocasTicketModel extends Equatable {
       "available": available,
       "available_from": availableFrom,
       "available_to": availableTo,
-      "status": status,
+      "status": status?.value,
       "created_at": createdAt,
       "updated_at": updatedAt,
       "formatted_price": formattedPrice,
@@ -94,7 +97,7 @@ class AnbocasTicketModel extends Equatable {
     int? available,
     dynamic availableFrom,
     dynamic availableTo,
-    String? status,
+    AnbocasTicketStatus? status,
     String? createdAt,
     String? updatedAt,
     String? formattedPrice,
