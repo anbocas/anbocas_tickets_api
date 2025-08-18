@@ -1,7 +1,7 @@
-import 'package:example/companies_tab_view.dart';
-import 'package:example/events_tab_view.dart';
-import 'package:example/orders_tab_view.dart';
-import 'package:example/tickets_tab_view.dart';
+import 'package:example/companies/companies_tab_view.dart';
+import 'package:example/events/events_tab_view.dart';
+import 'package:example/orders/orders_tab_view.dart';
+import 'package:example/tickets/tickets_tab_view.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
