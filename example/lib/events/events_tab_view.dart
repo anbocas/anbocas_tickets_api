@@ -2,6 +2,7 @@ import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
 import 'package:example/events/event_form_screen.dart';
 import 'package:example/main.dart';
 import 'package:flutter/material.dart';
+import 'package:toastification/toastification.dart';
 
 class EventsTabView extends StatefulWidget {
   const EventsTabView({super.key});
@@ -82,8 +83,12 @@ class _EventsTabViewState extends State<EventsTabView> {
             if (_eventsResponse?.currentPage != null &&
                 _eventsResponse?.lastPage != null &&
                 _eventsResponse!.currentPage! >= _eventsResponse!.lastPage!) {
-              ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-                  const SnackBar(content: Text('Nothing to load.')));
+              toastification.show(
+                title: const Text('Nothing to load.'),
+                style: ToastificationStyle.minimal,
+                type: ToastificationType.info,
+                autoCloseDuration: const Duration(seconds: 5),
+              );
             } else {
               getEvents();
             }

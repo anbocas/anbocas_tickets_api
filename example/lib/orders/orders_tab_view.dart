@@ -26,7 +26,7 @@ class _OrdersTabViewState extends State<OrdersTabView> {
         itemCount: 5,
         itemBuilder: (context, index) {
           // final event = _events[index];
-          return ListTile(
+          return const ListTile(
               // title: Text(event.name ?? 'N/A'),
               );
         },

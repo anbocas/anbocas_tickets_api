@@ -28,6 +28,11 @@ export 'src/events/anbocas_events.dart';
 // companies
 export 'src/companies/anbocas_companies.dart';
 
+// categories
+export 'src/categories/constants/anbocas_category_status.dart';
+export 'src/categories/models/anbocas_category_model.dart';
+export 'src/categories/anbocas_categories.dart';
+
 // tickets
 export 'src/tickets/constants/anbocas_ticket_status.dart';
 

@@ -4,22 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:toastification/toastification.dart';
 
-class CompanyDropdownFormField extends StatefulWidget {
-  const CompanyDropdownFormField({
+class CategoryDropdownFormField extends StatefulWidget {
+  const CategoryDropdownFormField({
     super.key,
     this.value,
     this.onChanged,
   });
 
-  final AnbocasCompanyModel? value;
-  final void Function(AnbocasCompanyModel? value)? onChanged;
+  final AnbocasCategoryModel? value;
+  final void Function(AnbocasCategoryModel? value)? onChanged;
 
   @override
-  State<CompanyDropdownFormField> createState() =>
-      _CompanyDropdownFormFieldState();
+  State<CategoryDropdownFormField> createState() =>
+      _CategoryDropdownFormFieldState();
 }
 
-class _CompanyDropdownFormFieldState extends State<CompanyDropdownFormField> {
+class _CategoryDropdownFormFieldState extends State<CategoryDropdownFormField> {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField(
@@ -42,7 +42,7 @@ class _CompanyDropdownFormFieldState extends State<CompanyDropdownFormField> {
               children: [
                 const Icon(Icons.arrow_drop_down),
                 InkWell(
-                  onTap: getCompanies,
+                  onTap: () => getCategories(),
                   child: const Icon(Icons.refresh),
                 ),
                 const Gap(8),
@@ -53,22 +53,22 @@ class _CompanyDropdownFormFieldState extends State<CompanyDropdownFormField> {
   }
 
   bool isLoading = false;
-  List<AnbocasCompanyModel> anbocasCompanies = [];
-  final anbocasCompaniesSDK = AnbocasCompanies();
+  List<AnbocasCategoryModel> anbocasCompanies = [];
+  final anbocasCompaniesSDK = AnbocasCategories();
 
   @override
   void initState() {
     super.initState();
-    getCompanies();
+    getCategories();
   }
 
-  void getCompanies() async {
+  void getCategories() async {
     setState(() {
       isLoading = true;
     });
 
     try {
-      final res = await anbocasCompaniesSDK.getCompanies(paginate: false);
+      final res = await anbocasCompaniesSDK.getCategories(paginate: false);
       anbocasCompanies = res.data;
     } catch (e) {
       if (kDebugMode) print(e);

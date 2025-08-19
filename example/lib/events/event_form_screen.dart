@@ -1,8 +1,10 @@
 import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
+import 'package:example/shared/category_dropdown_form_field.dart';
 import 'package:example/shared/company_dropdown_form_field.dart';
 import 'package:example/shared/my_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
 
 class EventFormScreen extends StatefulWidget {
   const EventFormScreen({super.key, this.event});
@@ -32,14 +34,14 @@ class _EventFormScreenState extends State<EventFormScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          DropdownButtonFormField<String>(
-            items: const [],
-            value: categoryId,
-            hint: const Text('Category'),
+          CategoryDropdownFormField(
+            value: category,
             onChanged: (value) {
-              setState(() {
-                categoryId = value;
-              });
+              if (value != null) {
+                setState(() {
+                  category = value;
+                });
+              }
             },
           ),
           const Gap(20),
@@ -87,6 +89,60 @@ class _EventFormScreenState extends State<EventFormScreen> {
           MyTextField(
             controller: longitude,
             hintText: 'Longitude',
+          ),
+          const Gap(20),
+          Row(
+            spacing: 8,
+            children: [
+              IconButton(
+                onPressed: () {
+                  showDatePicker(
+                    context: context,
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime(2050),
+                  ).then(
+                    (value) {
+                      if (value != null) {
+                        setState(() {
+                          startDateTime = value;
+                        });
+                      }
+                    },
+                  );
+                },
+                icon: const Icon(Icons.calendar_month),
+              ),
+              Text(startDateTime != null
+                  ? DateFormat('dd/MM/yyyy hh:mm a').format(startDateTime!)
+                  : 'Select Start Date & Time')
+            ],
+          ),
+          const Gap(20),
+          Row(
+            spacing: 8,
+            children: [
+              IconButton(
+                onPressed: () {
+                  showDatePicker(
+                    context: context,
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime(2050),
+                  ).then(
+                    (value) {
+                      if (value != null) {
+                        setState(() {
+                          endDateTime = value;
+                        });
+                      }
+                    },
+                  );
+                },
+                icon: const Icon(Icons.calendar_month),
+              ),
+              Text(endDateTime != null
+                  ? DateFormat('dd/MM/yyyy hh:mm a').format(endDateTime!)
+                  : 'Select End Date & Time')
+            ],
           ),
           const Gap(20),
           DropdownButtonFormField(
@@ -161,6 +217,23 @@ class _EventFormScreenState extends State<EventFormScreen> {
           Row(
             spacing: 8,
             children: [
+              const Text('Is Free'),
+              Checkbox(
+                value: isFree,
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      isFree = value;
+                    });
+                  }
+                },
+              )
+            ],
+          ),
+          const Gap(20),
+          Row(
+            spacing: 8,
+            children: [
               const Text('Is Booking Open'),
               Checkbox(
                 value: isBookingOpen,
@@ -191,30 +264,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
         height: 50,
         minWidth: double.infinity,
         textColor: Colors.white,
-        onPressed: () {
-          //_anbocasEvents.createEvent(
-          // required String categoryId,
-          // required String companyId,
-          // required String name,
-          // required String description,
-          // String? website,
-          // String? venue,
-          // required String location,
-          // required String latitude,
-          // required String longitude,
-          // required DateTime startDateTime,
-          // required DateTime endDateTime,
-          // required AnbocasEventLocationType locationType,
-          // String? meetingLink,
-          // bool isPublic = true,
-          // bool isFree = false,
-          // bool groupTicketingAllowed = true,
-          // bool createOrganiserForVenue = false,
-          // bool isBookingOpen = true,
-          // String? referenceId,
-          // String? bannerPath,
-          //         );
-        },
+        onPressed: _createEvent,
         color: Colors.blue,
         child: const Text('Submit'),
       ),
@@ -222,8 +272,9 @@ class _EventFormScreenState extends State<EventFormScreen> {
   }
 
   final _anbocasEvents = AnbocasEvents();
+  bool isLoading = false;
 
-  String? categoryId;
+  AnbocasCategoryModel? category;
   AnbocasCompanyModel? company;
   final name = TextEditingController();
   final description = TextEditingController();
@@ -240,6 +291,63 @@ class _EventFormScreenState extends State<EventFormScreen> {
   bool groupTicketingAllowed = false;
   bool createOrganiserForVenue = false;
   bool isBookingOpen = false;
+  bool isFree = false;
   final referenceId = TextEditingController();
   final bannerPath = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    name.text = 'Event 1';
+    description.text = 'This is the description for my event.';
+    website.text = 'https://forwardcode.com';
+    venue.text = 'Here comes my venu.';
+    location.text = 'Remote';
+    latitude.text = '0';
+    longitude.text = '0';
+    startDateTime = DateTime.now();
+    endDateTime = startDateTime!.add(const Duration(days: 10));
+    locationType = AnbocasEventLocationType.virtual;
+    meetingLink.text = 'https://forwardcode.com';
+    isPublic = true;
+    groupTicketingAllowed = true;
+    createOrganiserForVenue = true;
+    isBookingOpen = true;
+  }
+
+  void _createEvent() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      _anbocasEvents.createEvent(
+      categoryId: category?.id ?? '',
+      companyId: company?.id ?? '',
+      name: name.text.trim(),
+      description: description.text.trim(),
+      website: website.text.trim(),
+      venue: venue.text.trim(),
+      location: location.text.trim(),
+      latitude: latitude.text.trim(),
+      longitude: longitude.text.trim(),
+      startDateTime: startDateTime!,
+      endDateTime: endDateTime!,
+      locationType: locationType!,
+      meetingLink: meetingLink.text.trim(),
+      isPublic: isPublic,
+      isFree: isFree,
+      groupTicketingAllowed: groupTicketingAllowed,
+      createOrganiserForVenue: createOrganiserForVenue,
+      isBookingOpen: isBookingOpen,
+      referenceId: referenceId.text.trim(),
+      bannerPath: bannerPath.text.trim(),
+    );
+    } catch(e) {
+      
+    }
+
+    setState(() {
+      isLoading = false;
+    });
+  }
 }

@@ -2,6 +2,7 @@ import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
 import 'package:example/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:toastification/toastification.dart';
 
 const kCompanyId = "08277ced-baec-4751-87b1-4786c786636a";
 
@@ -16,13 +17,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Anbocas Ticket Example',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
-      themeMode: ThemeMode.system,
-      home: const HomeScreen(),
+    return ToastificationWrapper(
+      child: MaterialApp(
+        title: 'Anbocas Ticket Example',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData.light(),
+        darkTheme: ThemeData.dark(),
+        themeMode: ThemeMode.system,
+        home: const HomeScreen(),
+      ),
     );
   }
 }

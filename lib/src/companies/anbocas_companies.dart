@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
 import 'package:anbocas_tickets_api/src/companies/constants/anbocas_company_routes.dart';
 import 'package:dio/dio.dart';
@@ -22,19 +24,19 @@ class AnbocasCompanies {
         },
       );
 
-      final data = response.data['data'];
-      final statusResponse = response.data['status'];
+      if (response.statusCode == HttpStatus.ok) {
+        final data = response.data['data'];
+        final statusResponse = response.data['status'];
 
-      if (data["data"] != null && statusResponse != null) {
-        final companies = (data["data"] as List)
+        final companies = ((paginate ? data["data"] : data) as List)
             .map((e) => AnbocasCompanyModel.fromJson(e))
             .toList();
 
         return AnbocasPaginatedResponse(
           data: companies,
-          currentPage: data['current_page'],
-          lastPage: data['last_page'],
-          perPage: data['per_page'],
+          currentPage: paginate ? data['current_page'] : null,
+          lastPage: paginate ? data['last_page'] : null,
+          perPage: paginate ? data['per_page'] : null,
           status: AnbocasStatusModel.fromMap(statusResponse),
         );
       }
