@@ -85,13 +85,13 @@ class AnbocasCompanies {
       MultipartFile? logo;
       MultipartFile? banner;
 
-      if (logoFilePath != null) {
+      if (logoFilePath != null && logoFilePath.isNotEmpty) {
         logo = await MultipartFile.fromFile(
           logoFilePath,
           filename: bannerFilePath?.split('/').last,
         );
       }
-      if (bannerFilePath != null) {
+      if (bannerFilePath != null && bannerFilePath.isNotEmpty) {
         banner = await MultipartFile.fromFile(bannerFilePath,
             filename: bannerFilePath.split('/').last);
       }

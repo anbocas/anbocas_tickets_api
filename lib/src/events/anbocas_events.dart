@@ -195,7 +195,7 @@ class AnbocasEvents {
     }
   }
 
-  Future<AnbocasEventModel?> createEvent({
+  Future<AnbocasEventModel> createEvent({
     required String categoryId,
     required String companyId,
     required String name,
@@ -304,7 +304,7 @@ class AnbocasEvents {
     }
   }
 
-  Future<AnbocasEventModel?> updateEvent({
+  Future<AnbocasEventModel> updateEvent({
     required String eventId,
     String? categoryId,
     String? companyId,
@@ -355,7 +355,7 @@ class AnbocasEvents {
 
       if (banner is MultipartFile) {
         formData.files.add(MapEntry('banner', banner));
-      } else {
+      } else if (banner != null) {
         formData.fields.add(MapEntry('banner', banner));
       }
       if (categoryId != null) {

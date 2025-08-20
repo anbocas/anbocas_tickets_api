@@ -1,6 +1,5 @@
 import 'package:example/companies/companies_tab_view.dart';
 import 'package:example/events/events_tab_view.dart';
-import 'package:example/orders/orders_tab_view.dart';
 import 'package:example/tickets/tickets_tab_view.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +35,6 @@ class HomeScreen extends StatelessWidget {
 
 enum AnbocasFeatures {
   events('Events'),
-  orders('Orders'),
   companies('Companies'),
   tickets('Tickets');
 
@@ -50,8 +48,6 @@ extension AnbocasFeaturesView on AnbocasFeatures {
     switch (this) {
       case AnbocasFeatures.events:
         return const EventsTabView();
-      case AnbocasFeatures.orders:
-        return const OrdersTabView();
       case AnbocasFeatures.companies:
         return const CompaniesTabView();
       case AnbocasFeatures.tickets:

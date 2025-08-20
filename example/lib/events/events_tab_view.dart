@@ -1,4 +1,5 @@
 import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
+import 'package:example/events/event_details_screen.dart';
 import 'package:example/events/event_form_screen.dart';
 import 'package:example/main.dart';
 import 'package:flutter/material.dart';
@@ -35,27 +36,13 @@ class _EventsTabViewState extends State<EventsTabView> {
                     itemBuilder: (context, index) {
                       final event = events[index];
                       return ListTile(
-                        onTap: () {},
+                        onTap: () {
+                          EventDetailsScreen.navigate(context, event);
+                        },
                         title: Text(event.name ?? 'N/A'),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                EventFormScreen.navigate(context, event);
-                              },
-                              icon: const Icon(Icons.edit),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                _anbocasEvents.deleteEvent(
-                                  eventId: event.id ?? '',
-                                  eventName: event.name ?? '',
-                                );
-                              },
-                              icon: const Icon(Icons.delete),
-                            ),
-                          ],
+                        trailing: PopupMenuButton(
+                          itemBuilder: (context) =>
+                              _itemBuilder(context, event),
                         ),
                       );
                     },
@@ -67,7 +54,17 @@ class _EventsTabViewState extends State<EventsTabView> {
                 bottom: 20,
                 child: FloatingActionButton(
                   onPressed: () {
-                    EventFormScreen.navigate(context);
+                    EventFormScreen.navigate(context).then(
+                      (value) {
+                        if (value != null) {
+                          setState(() {
+                            _eventsResponse = _eventsResponse?.copyWith(
+                              data: [value, ...(_eventsResponse?.data ?? [])],
+                            );
+                          });
+                        }
+                      },
+                    );
                   },
                   child: const Icon(Icons.create),
                 ),
@@ -117,14 +114,12 @@ class _EventsTabViewState extends State<EventsTabView> {
     if (_eventsResponse == null || refresh) {
       _eventsResponse = await _anbocasEvents.getEvents(
         companyId: kCompanyId,
-        pageLength: 1,
       );
     } else {
       final prevEventsResponse = _eventsResponse;
       _eventsResponse = await _anbocasEvents.getEvents(
         companyId: kCompanyId,
         page: (_eventsResponse!.currentPage ?? 0) + 1,
-        pageLength: 1,
       );
 
       _eventsResponse = _eventsResponse!.copyWith(
@@ -134,5 +129,71 @@ class _EventsTabViewState extends State<EventsTabView> {
     setState(() {
       _isLoading = false;
     });
+  }
+
+  List<PopupMenuEntry> _itemBuilder(
+    BuildContext context,
+    AnbocasEventModel event,
+  ) {
+    return [
+      PopupMenuItem(
+        onTap: () async {
+          final newEvent = await EventFormScreen.navigate(context, event);
+          if (newEvent != null) {
+            setState(
+              () {
+                _eventsResponse = _eventsResponse?.copyWith(
+                    data: _eventsResponse?.data.map(
+                          (e) {
+                            if (e.id == newEvent.id) {
+                              return newEvent;
+                            }
+                            return e;
+                          },
+                        ).toList() ??
+                        []);
+              },
+            );
+          }
+        },
+        child: const Text('Edit'),
+      ),
+      PopupMenuItem(
+        onTap: () async {
+          try {
+            await _anbocasEvents.deleteEvent(
+              eventId: event.id ?? '',
+              eventName: event.name ?? '',
+            );
+
+            toastification.show(
+              title: const Text('Event deleted successfully.'),
+              style: ToastificationStyle.minimal,
+              type: ToastificationType.success,
+              autoCloseDuration: const Duration(seconds: 5),
+            );
+
+            setState(() {
+              _eventsResponse = _eventsResponse?.copyWith(
+                data: (_eventsResponse?.data
+                        .where(
+                          (element) => element.id != event.id,
+                        )
+                        .toList() ??
+                    []),
+              );
+            });
+          } catch (e) {
+            toastification.show(
+              title: const Text('Opps! something went wrong, Try again.'),
+              style: ToastificationStyle.minimal,
+              type: ToastificationType.error,
+              autoCloseDuration: const Duration(seconds: 5),
+            );
+          }
+        },
+        child: const Text('Delete'),
+      ),
+    ];
   }
 }

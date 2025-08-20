@@ -5,14 +5,16 @@ import 'package:example/shared/my_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
+import 'package:toastification/toastification.dart';
 
 class EventFormScreen extends StatefulWidget {
   const EventFormScreen({super.key, this.event});
 
   final AnbocasEventModel? event;
 
-  static void navigate(BuildContext context, [AnbocasEventModel? event]) {
-    Navigator.push(
+  static Future<AnbocasEventModel?> navigate(BuildContext context,
+      [AnbocasEventModel? event]) {
+    return Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => EventFormScreen(event: event),
@@ -266,7 +268,9 @@ class _EventFormScreenState extends State<EventFormScreen> {
         textColor: Colors.white,
         onPressed: _createEvent,
         color: Colors.blue,
-        child: const Text('Submit'),
+        child: isLoading
+            ? const CircularProgressIndicator(color: Colors.white)
+            : const Text('Submit'),
       ),
     );
   }
@@ -298,21 +302,54 @@ class _EventFormScreenState extends State<EventFormScreen> {
   @override
   void initState() {
     super.initState();
-    name.text = 'Event 1';
-    description.text = 'This is the description for my event.';
-    website.text = 'https://forwardcode.com';
-    venue.text = 'Here comes my venu.';
-    location.text = 'Remote';
-    latitude.text = '0';
-    longitude.text = '0';
-    startDateTime = DateTime.now();
-    endDateTime = startDateTime!.add(const Duration(days: 10));
-    locationType = AnbocasEventLocationType.virtual;
-    meetingLink.text = 'https://forwardcode.com';
-    isPublic = true;
-    groupTicketingAllowed = true;
-    createOrganiserForVenue = true;
-    isBookingOpen = true;
+    final event = widget.event;
+    if (event == null) {
+      name.text = 'Event 1';
+      description.text = 'This is the description for my event.';
+      website.text = 'https://forwardcode.com';
+      venue.text = 'Here comes my venu.';
+      location.text = 'Remote';
+      latitude.text = '0';
+      longitude.text = '0';
+      startDateTime = DateTime.now();
+      endDateTime = startDateTime!.add(const Duration(days: 10));
+      locationType = AnbocasEventLocationType.virtual;
+      meetingLink.text = 'https://forwardcode.com';
+      isPublic = true;
+      groupTicketingAllowed = true;
+      createOrganiserForVenue = true;
+      isBookingOpen = true;
+    } else {
+      name.text = event.name ?? '';
+      description.text = event.description ?? '';
+      website.text = event.website ?? '';
+      venue.text = event.venue ?? '';
+      location.text = event.location ?? '';
+      latitude.text = event.latitude?.toString() ?? '0';
+      longitude.text = event.longitude?.toString() ?? '0';
+      startDateTime = DateTime.tryParse(event.startDate ?? '');
+      endDateTime = DateTime.tryParse(event.endDate ?? '');
+      locationType = event.locationType;
+      meetingLink.text = event.meetingLink ?? '';
+      isPublic = event.isPublic == 1;
+      groupTicketingAllowed = event.groupTicketingAllowed == 1;
+      isBookingOpen = event.isBookingOpen == 1;
+    }
+  }
+
+  @override
+  void dispose() {
+    name.dispose();
+    description.dispose();
+    website.dispose();
+    venue.dispose();
+    location.dispose();
+    meetingLink.dispose();
+    latitude.dispose();
+    longitude.dispose();
+    referenceId.dispose();
+    bannerPath.dispose();
+    super.dispose();
   }
 
   void _createEvent() async {
@@ -320,30 +357,72 @@ class _EventFormScreenState extends State<EventFormScreen> {
       isLoading = true;
     });
     try {
-      _anbocasEvents.createEvent(
-      categoryId: category?.id ?? '',
-      companyId: company?.id ?? '',
-      name: name.text.trim(),
-      description: description.text.trim(),
-      website: website.text.trim(),
-      venue: venue.text.trim(),
-      location: location.text.trim(),
-      latitude: latitude.text.trim(),
-      longitude: longitude.text.trim(),
-      startDateTime: startDateTime!,
-      endDateTime: endDateTime!,
-      locationType: locationType!,
-      meetingLink: meetingLink.text.trim(),
-      isPublic: isPublic,
-      isFree: isFree,
-      groupTicketingAllowed: groupTicketingAllowed,
-      createOrganiserForVenue: createOrganiserForVenue,
-      isBookingOpen: isBookingOpen,
-      referenceId: referenceId.text.trim(),
-      bannerPath: bannerPath.text.trim(),
-    );
-    } catch(e) {
-      
+      late final AnbocasEventModel event;
+
+      if (widget.event == null) {
+        event = await _anbocasEvents.createEvent(
+          categoryId: category?.id ?? '',
+          companyId: company?.id ?? '',
+          name: name.text.trim(),
+          description: description.text.trim(),
+          website: website.text.trim(),
+          venue: venue.text.trim(),
+          location: location.text.trim(),
+          latitude: latitude.text.trim(),
+          longitude: longitude.text.trim(),
+          startDateTime: startDateTime!,
+          endDateTime: endDateTime!,
+          locationType: locationType!,
+          meetingLink: meetingLink.text.trim(),
+          isPublic: isPublic,
+          isFree: isFree,
+          groupTicketingAllowed: groupTicketingAllowed,
+          createOrganiserForVenue: createOrganiserForVenue,
+          isBookingOpen: isBookingOpen,
+          referenceId: referenceId.text.trim(),
+          bannerPath: bannerPath.text.trim(),
+        );
+      } else {
+        event = await _anbocasEvents.updateEvent(
+          eventId: widget.event?.id ?? '',
+          categoryId: category?.id ?? '',
+          companyId: company?.id ?? '',
+          name: name.text.trim(),
+          description: description.text.trim(),
+          website: website.text.trim(),
+          venue: venue.text.trim(),
+          location: location.text.trim(),
+          latitude: latitude.text.trim(),
+          longitude: longitude.text.trim(),
+          startDateTime: startDateTime!,
+          endDateTime: endDateTime!,
+          locationType: locationType!,
+          meetingLink: meetingLink.text.trim(),
+          isPublic: isPublic,
+          isFree: isFree,
+          groupTicketingAllowed: groupTicketingAllowed,
+          isBookingOpen: isBookingOpen,
+          bannerPath: bannerPath.text.trim(),
+        );
+      }
+
+      if (mounted) {
+        toastification.show(
+          title: Text(
+              'Event ${widget.event == null ? 'created' : 'updated'} successfullly'),
+          style: ToastificationStyle.minimal,
+          type: ToastificationType.success,
+          autoCloseDuration: const Duration(seconds: 5),
+        );
+        Navigator.pop(context, event);
+      }
+    } catch (e) {
+      toastification.show(
+        title: const Text('Opps! something went wrong, Try Again'),
+        style: ToastificationStyle.minimal,
+        type: ToastificationType.error,
+        autoCloseDuration: const Duration(seconds: 5),
+      );
     }
 
     setState(() {

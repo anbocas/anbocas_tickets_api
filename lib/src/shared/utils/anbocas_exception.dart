@@ -18,16 +18,14 @@ class AnbocasApiException extends AnbocasBaseException {
   factory AnbocasApiException.fromException(Object e,
       [StackTrace? stackTrace]) {
     if (e is DioException) {
-      var dioException = e;
-      if (dioException.type == DioExceptionType.badResponse &&
-          dioException.response != null) {
-        throw AnbocasApiException(_handleBadResponse(dioException.response!));
-      } else {
-        throw AnbocasApiException(_handleGenericError(e.type));
+      if (e.type == DioExceptionType.badResponse && e.response != null) {
+        return AnbocasApiException(_handleBadResponse(e.response!));
       }
-    } else {
-      throw AnbocasApiException(e.toString());
+
+      return AnbocasApiException(_handleGenericError(e.type));
     }
+
+    return AnbocasApiException(e.toString());
   }
 
   static String _handleGenericError(DioExceptionType type) {
