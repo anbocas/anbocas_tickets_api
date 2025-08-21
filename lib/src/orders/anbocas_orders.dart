@@ -1,6 +1,5 @@
 import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
 import 'package:anbocas_tickets_api/src/orders/constants/anbocas_order_routes.dart';
-import 'package:anbocas_tickets_api/src/orders/models/anbocas_order_model.dart';
 
 class AnbocasOrders {
   Future<AnbocasPaginatedResponse<List<AnbocasOrderModel>>> getOrders({

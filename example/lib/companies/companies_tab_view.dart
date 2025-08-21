@@ -1,6 +1,7 @@
 import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
 import 'package:example/companies/company_details_screen.dart';
 import 'package:example/companies/company_form_screen.dart';
+import 'package:example/orders/orders_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:toastification/toastification.dart';
 
@@ -115,11 +116,15 @@ class _CompaniesTabViewState extends State<CompaniesTabView> {
       _isLoading = true;
     });
     if (_companiesResponse == null || refresh) {
-      _companiesResponse = await _anbocasCompanies.getCompanies(paginate: true);
+      _companiesResponse = await _anbocasCompanies.getCompanies(
+        paginate: true,
+        pageLength: 2,
+      );
     } else {
       final prevCompanysResponse = _companiesResponse;
       _companiesResponse = await _anbocasCompanies.getCompanies(
         paginate: true,
+        pageLength: 2,
         page: (_companiesResponse!.currentPage ?? 0) + 1,
       );
 
@@ -137,6 +142,10 @@ class _CompaniesTabViewState extends State<CompaniesTabView> {
     AnbocasCompanyModel company,
   ) {
     return [
+      PopupMenuItem(
+        onTap: () => OrdersScreen.navigate(context, company),
+        child: const Text('Orders'),
+      ),
       PopupMenuItem(
         onTap: () {
           CompanyFormScreen.navigate(context, company);

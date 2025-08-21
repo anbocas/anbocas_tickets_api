@@ -2,6 +2,7 @@ import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
 import 'package:example/events/event_details_screen.dart';
 import 'package:example/events/event_form_screen.dart';
 import 'package:example/main.dart';
+import 'package:example/tickets/tickets_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:toastification/toastification.dart';
 
@@ -114,11 +115,13 @@ class _EventsTabViewState extends State<EventsTabView> {
     if (_eventsResponse == null || refresh) {
       _eventsResponse = await _anbocasEvents.getEvents(
         companyId: kCompanyId,
+        pageLength: 2,
       );
     } else {
       final prevEventsResponse = _eventsResponse;
       _eventsResponse = await _anbocasEvents.getEvents(
         companyId: kCompanyId,
+        pageLength: 2,
         page: (_eventsResponse!.currentPage ?? 0) + 1,
       );
 
@@ -137,25 +140,7 @@ class _EventsTabViewState extends State<EventsTabView> {
   ) {
     return [
       PopupMenuItem(
-        onTap: () async {
-          final newEvent = await EventFormScreen.navigate(context, event);
-          if (newEvent != null) {
-            setState(
-              () {
-                _eventsResponse = _eventsResponse?.copyWith(
-                    data: _eventsResponse?.data.map(
-                          (e) {
-                            if (e.id == newEvent.id) {
-                              return newEvent;
-                            }
-                            return e;
-                          },
-                        ).toList() ??
-                        []);
-              },
-            );
-          }
-        },
+        onTap: () => TicketsScreen.navigate(context, event),
         child: const Text('Tickets'),
       ),
       PopupMenuItem(
@@ -165,15 +150,16 @@ class _EventsTabViewState extends State<EventsTabView> {
             setState(
               () {
                 _eventsResponse = _eventsResponse?.copyWith(
-                    data: _eventsResponse?.data.map(
-                          (e) {
-                            if (e.id == newEvent.id) {
-                              return newEvent;
-                            }
-                            return e;
-                          },
-                        ).toList() ??
-                        []);
+                  data: _eventsResponse?.data.map(
+                        (e) {
+                          if (e.id == newEvent.id) {
+                            return newEvent;
+                          }
+                          return e;
+                        },
+                      ).toList() ??
+                      [],
+                );
               },
             );
           }

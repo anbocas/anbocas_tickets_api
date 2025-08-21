@@ -52,10 +52,10 @@ class AnbocasTickets {
     required String eventId,
     required String name,
     String? description,
-    required String capacity,
-    required String price,
-    required String availableFrom,
-    required String availableTo,
+    required int capacity,
+    required double price,
+    required DateTime availableFrom,
+    required DateTime availableTo,
     required AnbocasTicketStatus status,
   }) async {
     try {
@@ -67,8 +67,8 @@ class AnbocasTickets {
         'description': description,
         'capacity': capacity,
         'price': price,
-        'available_from': availableFrom,
-        'available_to': availableTo,
+        'available_from': availableFrom.toString(),
+        'available_to': availableTo.toString(),
         'status': status.value,
       });
 
@@ -126,23 +126,28 @@ class AnbocasTickets {
     String? eventId,
     String? name,
     String? description,
-    String? capacity,
-    String? price,
-    String? availableFrom,
-    String? availableTo,
+    int? capacity,
+    double? price,
+    DateTime? availableFrom,
+    DateTime? availableTo,
     AnbocasTicketStatus? status,
   }) async {
     try {
       final dio = AnbocasTicketsConfig.instance.dio;
-      Map<String, dynamic> data = {};
-
+      final data = <String, dynamic>{};
       if (eventId != null) data['event_id'] = eventId;
       if (name != null) data['name'] = name;
-      if (description != null) data['description'] = description;
+      if (description != null && description.isNotEmpty) {
+        data['description'] = description;
+      }
       if (capacity != null) data['capacity'] = capacity;
       if (price != null) data['price'] = price;
-      if (availableFrom != null) data['available_from'] = availableFrom;
-      if (availableTo != null) data['available_to'] = availableTo;
+      if (availableFrom != null) {
+        data['available_from'] = availableFrom.toString();
+      }
+      if (availableTo != null) {
+        data['available_to'] = availableTo.toString();
+      }
       if (status != null) data['status'] = status.value;
 
       final response = await dio.put(
