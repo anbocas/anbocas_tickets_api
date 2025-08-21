@@ -156,6 +156,28 @@ class _EventsTabViewState extends State<EventsTabView> {
             );
           }
         },
+        child: const Text('Tickets'),
+      ),
+      PopupMenuItem(
+        onTap: () async {
+          final newEvent = await EventFormScreen.navigate(context, event);
+          if (newEvent != null) {
+            setState(
+              () {
+                _eventsResponse = _eventsResponse?.copyWith(
+                    data: _eventsResponse?.data.map(
+                          (e) {
+                            if (e.id == newEvent.id) {
+                              return newEvent;
+                            }
+                            return e;
+                          },
+                        ).toList() ??
+                        []);
+              },
+            );
+          }
+        },
         child: const Text('Edit'),
       ),
       PopupMenuItem(

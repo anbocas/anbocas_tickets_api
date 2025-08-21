@@ -18,4 +18,17 @@ abstract final class DataSerializer {
     }
     return null;
   }
+
+  static bool? toBool(value) {
+    if (value is bool) {
+      return value;
+    }
+    if (value is String) {
+      return value == '1';
+    }
+    if (value is num) {
+      return value == 1;
+    }
+    return null;
+  }
 }

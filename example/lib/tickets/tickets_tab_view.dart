@@ -1,7 +1,12 @@
+import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
 import 'package:flutter/material.dart';
 
 class TicketsTabView extends StatefulWidget {
-  const TicketsTabView({super.key});
+  const TicketsTabView({super.key, required this.event});
+
+  final AnbocasEventModel event;
+
+  
 
   @override
   State<TicketsTabView> createState() => _TicketsTabViewState();

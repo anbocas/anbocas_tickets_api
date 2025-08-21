@@ -1,7 +1,7 @@
-import 'package:anbocas_tickets_api/src/shared/utils/data_serializer.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
+import 'package:anbocas_tickets_api/src/shared/utils/data_serializer.dart';
 
 class AnbocasEventModel extends Equatable {
   final String? id;
@@ -18,22 +18,34 @@ class AnbocasEventModel extends Equatable {
   final double? longitude;
   final AnbocasEventLocationType? locationType;
   final String? meetingLink;
-  final String? startDate;
-  final String? endDate;
-  final int? isBookingOpen;
-  final int? isFree;
-  final int? isPublic;
-  final int? absorbPlatformFee;
-  final int? groupTicketingAllowed;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final bool? isBookingOpen;
+
+  /// 1 = True And 0 = False
+  final bool? isFree;
+
+  /// 1 = True And 0 = False
+  final bool? isPublic;
+
+  /// 1 = True And 0 = False
+  final bool? absorbPlatformFee;
+
+  /// 1 = True And 0 = False
+  final bool? groupTicketingAllowed;
   final AnbocasEventStatus? status;
   final String? createdBy;
-  final String? createdAt;
-  final String? updatedAt;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+
+  /// 1 = True And 0 = False
   final bool? isExpired;
   final String? referenceId;
 
-  // only available or get when call or view the event details
+  /// This field is only available for model to get view the event details
   final List<AnbocasTicketModel> tickets;
+
+  /// This field is only available for model to get view the event details
   final AnbocasCompanyModel? company;
 
   const AnbocasEventModel({
@@ -101,50 +113,50 @@ class AnbocasEventModel extends Equatable {
         referenceId,
       ];
 
-  factory AnbocasEventModel.fromJson(Map<String, dynamic> json) {
+  factory AnbocasEventModel.fromMap(Map<String, dynamic> map) {
     return AnbocasEventModel(
-      id: json["id"],
-      categoryId: json["category_id"],
-      companyId: json["company_id"],
-      name: json["name"],
-      slug: json["slug"],
-      imageUrl: json["image_url"],
-      description: json["description"],
-      location: json["location"],
-      website: json["website"],
-      venue: json["venue"],
-      latitude: DataSerializer.toDouble(json["latitude"]),
-      longitude: DataSerializer.toDouble(json["longitude"]),
-      locationType: AnbocasEventLocationType.fromValue(json["location_type"]),
-      meetingLink: json["meeting_link"],
-      startDate: json["start_date"],
-      endDate: json["end_date"],
-      isBookingOpen: DataSerializer.toInt(json["is_booking_open"]),
-      isFree: DataSerializer.toInt(json["is_free"]),
-      isPublic: DataSerializer.toInt(json["is_public"]),
-      absorbPlatformFee: DataSerializer.toInt(json["absorb_platform_fee"]),
+      id: map["id"],
+      categoryId: map["category_id"],
+      companyId: map["company_id"],
+      name: map["name"],
+      slug: map["slug"],
+      imageUrl: map["image_url"],
+      description: map["description"],
+      location: map["location"],
+      website: map["website"],
+      venue: map["venue"],
+      latitude: DataSerializer.toDouble(map["latitude"]),
+      longitude: DataSerializer.toDouble(map["longitude"]),
+      locationType: AnbocasEventLocationType.fromValue(map["location_type"]),
+      meetingLink: map["meeting_link"],
+      startDate: DateTime.tryParse(map["start_date"] ?? ''),
+      endDate: DateTime.tryParse(map["end_date"] ?? ''),
+      isBookingOpen: DataSerializer.toBool(map["is_booking_open"]),
+      isFree: DataSerializer.toBool(map["is_free"]),
+      isPublic: DataSerializer.toBool(map["is_public"]),
+      absorbPlatformFee: DataSerializer.toBool(map["absorb_platform_fee"]),
       groupTicketingAllowed:
-          DataSerializer.toInt(json["group_ticketing_allowed"]),
-      status: AnbocasEventStatus.fromValue(json["status"]),
-      createdBy: json["created_by"],
-      createdAt: json["created_at"],
-      updatedAt: json["updated_at"],
-      referenceId: json["reference_id"],
-      isExpired: json["is_expired"],
-      company: json["company"] != null
-          ? AnbocasCompanyModel.fromJson(json["company"])
+          DataSerializer.toBool(map["group_ticketing_allowed"]),
+      status: AnbocasEventStatus.fromValue(map["status"]),
+      createdBy: map["created_by"],
+      createdAt: DateTime.tryParse(map["created_at"] ?? ''),
+      updatedAt: DateTime.tryParse(map["updated_at"] ?? ''),
+      referenceId: map["reference_id"],
+      isExpired: map["is_expired"],
+      company: map["company"] != null
+          ? AnbocasCompanyModel.fromMap(map["company"])
           : null,
-      tickets: json["tickets"] != null
-          ? (json["tickets"] as List)
+      tickets: map["tickets"] != null
+          ? (map["tickets"] as List)
               .map(
-                (e) => AnbocasTicketModel.fromJson(e),
+                (e) => AnbocasTicketModel.fromMap(e),
               )
               .toList()
           : [],
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
       "id": id,
       "category_id": categoryId,
@@ -158,22 +170,22 @@ class AnbocasEventModel extends Equatable {
       "location": location,
       "latitude": latitude,
       "longitude": longitude,
-      "location_type": locationType,
+      "location_type": locationType?.value,
       "meeting_link": meetingLink,
-      "start_date": startDate,
-      "end_date": endDate,
-      "is_booking_open": isBookingOpen,
-      "is_free": isFree,
-      "is_public": isPublic,
-      "absorb_platform_fee": absorbPlatformFee,
-      "group_ticketing_allowed": groupTicketingAllowed,
-      "status": status,
+      "start_date": startDate?.toString(),
+      "end_date": endDate?.toString(),
+      "is_booking_open": (isBookingOpen ?? false) ? 1 : 0,
+      "is_free": (isFree ?? false) ? 1 : 0,
+      "is_public": (isPublic ?? false) ? 1 : 0,
+      "absorb_platform_fee": (absorbPlatformFee ?? false) ? 1 : 0,
+      "group_ticketing_allowed": (groupTicketingAllowed ?? false) ? 1 : 0,
+      "status": status?.value,
       "created_by": createdBy,
-      "created_at": createdAt,
-      "updated_at": updatedAt,
-      "is_expired": isExpired,
-      "company": company,
-      "tickets": tickets.map((e) => e.toJson()).toList(),
+      "created_at": createdAt?.toString(),
+      "updated_at": updatedAt?.toString(),
+      "is_expired": (isExpired ?? false) ? 1 : 0,
+      "company": company?.toMap(),
+      "tickets": tickets.map((e) => e.toMap()).toList(),
     };
   }
 
@@ -192,17 +204,17 @@ class AnbocasEventModel extends Equatable {
     double? longitude,
     AnbocasEventLocationType? locationType,
     String? meetingLink,
-    String? startDate,
-    String? endDate,
-    int? isBookingOpen,
-    int? isFree,
-    int? isPublic,
-    int? absorbPlatformFee,
-    int? groupTicketingAllowed,
+    DateTime? startDate,
+    DateTime? endDate,
+    bool? isBookingOpen,
+    bool? isFree,
+    bool? isPublic,
+    bool? absorbPlatformFee,
+    bool? groupTicketingAllowed,
     AnbocasEventStatus? status,
     String? createdBy,
-    String? createdAt,
-    String? updatedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
     bool? isExpired,
     String? referenceId,
     List<AnbocasTicketModel>? tickets,

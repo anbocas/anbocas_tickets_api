@@ -34,7 +34,7 @@ class AnbocasEvents {
 
       if (data["data"] != null && statusResponse != null) {
         final events = (data["data"] as List)
-            .map((e) => AnbocasEventModel.fromJson(e))
+            .map((e) => AnbocasEventModel.fromMap(e))
             .toList();
 
         return AnbocasPaginatedResponse(
@@ -62,7 +62,7 @@ class AnbocasEvents {
       );
 
       if (response.data['data'] != null) {
-        return AnbocasEventModel.fromJson(response.data['data']);
+        return AnbocasEventModel.fromMap(response.data['data']);
       } else {
         return null;
       }
@@ -96,7 +96,7 @@ class AnbocasEvents {
 
       if (data["data"] != null && statusResponse != null) {
         final eventGuests = (data["data"] as List)
-            .map((e) => AnbocasEventGuestsModel.fromJson(e))
+            .map((e) => AnbocasEventGuestsModel.fromMap(e))
             .toList();
 
         return AnbocasPaginatedResponse(
@@ -124,7 +124,7 @@ class AnbocasEvents {
 
       if (response.data['data']?['stats'] != null) {
         return (response.data['data']['stats'] as List)
-            .map((e) => AnbocasEventStatsModel.fromJson(e))
+            .map((e) => AnbocasEventStatsModel.fromMap(e))
             .toList();
       }
 
@@ -179,7 +179,7 @@ class AnbocasEvents {
         name: response.data["name"],
         statusCode: response.statusCode!,
         ticketModel: response.data["ticket"] != null
-            ? AnbocasTicketModel.fromJson(response.data["ticket"])
+            ? AnbocasTicketModel.fromMap(response.data["ticket"])
             : null,
       );
     } on DioException catch (error) {
@@ -189,7 +189,7 @@ class AnbocasEvents {
         name: error.response?.data["name"],
         statusCode: 400,
         ticketModel: error.response?.data["ticket"] != null
-            ? AnbocasTicketModel.fromJson(error.response?.data["ticket"])
+            ? AnbocasTicketModel.fromMap(error.response?.data["ticket"])
             : null,
       );
     }
@@ -273,7 +273,7 @@ class AnbocasEvents {
       );
 
       if (response.statusCode == 200) {
-        return AnbocasEventModel.fromJson(response.data['data']);
+        return AnbocasEventModel.fromMap(response.data['data']);
       } else {
         throw Exception("Failed to create event: ${response.statusMessage}");
       }
@@ -417,7 +417,7 @@ class AnbocasEvents {
       );
 
       if (response.statusCode == 200) {
-        return AnbocasEventModel.fromJson(response.data['data']);
+        return AnbocasEventModel.fromMap(response.data['data']);
       }
       throw Exception("Failed to update event: ${response.statusMessage}");
     } catch (e, st) {

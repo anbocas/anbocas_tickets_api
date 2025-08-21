@@ -1,3 +1,5 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:anbocas_tickets_api/src/shared/utils/data_serializer.dart';
 import 'package:equatable/equatable.dart';
 
 class AnbocasOrderPaymentModel extends Equatable {
@@ -9,12 +11,12 @@ class AnbocasOrderPaymentModel extends Equatable {
   final String? method;
   final String? email;
   final String? phone;
-  final String? amount;
+  final double? amount;
   final String? payerName;
   final double? fee;
   final double? tax;
-  final String? createdAt;
-  final String? updatedAt;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   const AnbocasOrderPaymentModel({
     this.id,
@@ -51,22 +53,22 @@ class AnbocasOrderPaymentModel extends Equatable {
         updatedAt,
       ];
 
-  factory AnbocasOrderPaymentModel.fromJson(Map<String, dynamic> json) {
+  factory AnbocasOrderPaymentModel.fromMap(Map<String, dynamic> map) {
     return AnbocasOrderPaymentModel(
-      id: json["id"],
-      gatewayProvider: json["gateway_provider"],
-      gatewayTransactionId: json["gateway_transaction_id"],
-      eventId: json["event_id"],
-      orderId: json["order_id"],
-      method: json["method"],
-      email: json["email"],
-      phone: json["phone"],
-      amount: json["amount"],
-      payerName: json["payer_name"],
-      fee: json["fee"],
-      tax: json["tax"],
-      createdAt: json["created_at"],
-      updatedAt: json["updated_at"],
+      id: map["id"],
+      gatewayProvider: map["gateway_provider"],
+      gatewayTransactionId: map["gateway_transaction_id"],
+      eventId: map["event_id"],
+      orderId: map["order_id"],
+      method: map["method"],
+      email: map["email"],
+      phone: map["phone"],
+      amount: map["amount"],
+      payerName: map["payer_name"],
+      fee: DataSerializer.toDouble(map["fee"]),
+      tax: DataSerializer.toDouble(map["tax"]),
+      createdAt: DateTime.tryParse(map["created_at"] ?? ''),
+      updatedAt: DateTime.tryParse(map["updated_at"] ?? ''),
     );
   }
 
@@ -87,5 +89,39 @@ class AnbocasOrderPaymentModel extends Equatable {
       "created_at": createdAt,
       "updated_at": updatedAt,
     };
+  }
+
+  AnbocasOrderPaymentModel copyWith({
+    String? id,
+    String? gatewayProvider,
+    String? gatewayTransactionId,
+    String? eventId,
+    String? orderId,
+    String? method,
+    String? email,
+    String? phone,
+    double? amount,
+    String? payerName,
+    double? fee,
+    double? tax,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return AnbocasOrderPaymentModel(
+      id: id ?? this.id,
+      gatewayProvider: gatewayProvider ?? this.gatewayProvider,
+      gatewayTransactionId: gatewayTransactionId ?? this.gatewayTransactionId,
+      eventId: eventId ?? this.eventId,
+      orderId: orderId ?? this.orderId,
+      method: method ?? this.method,
+      email: email ?? this.email,
+      phone: phone ?? this.phone,
+      amount: amount ?? this.amount,
+      payerName: payerName ?? this.payerName,
+      fee: fee ?? this.fee,
+      tax: tax ?? this.tax,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
   }
 }

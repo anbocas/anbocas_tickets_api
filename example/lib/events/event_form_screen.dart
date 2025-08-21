@@ -327,13 +327,13 @@ class _EventFormScreenState extends State<EventFormScreen> {
       location.text = event.location ?? '';
       latitude.text = event.latitude?.toString() ?? '0';
       longitude.text = event.longitude?.toString() ?? '0';
-      startDateTime = DateTime.tryParse(event.startDate ?? '');
-      endDateTime = DateTime.tryParse(event.endDate ?? '');
+      startDateTime = event.startDate;
+      endDateTime = event.endDate;
       locationType = event.locationType;
       meetingLink.text = event.meetingLink ?? '';
-      isPublic = event.isPublic == 1;
-      groupTicketingAllowed = event.groupTicketingAllowed == 1;
-      isBookingOpen = event.isBookingOpen == 1;
+      isPublic = event.isPublic ?? false;
+      groupTicketingAllowed = event.groupTicketingAllowed ?? false;
+      isBookingOpen = event.isBookingOpen ?? false;
     }
   }
 

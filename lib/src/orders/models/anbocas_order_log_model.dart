@@ -4,7 +4,7 @@ class AnbocasOrderLogModel extends Equatable {
   final String? id;
   final String? orderId;
   final String? text;
-  final String? createdAt;
+  final DateTime? createdAt;
 
   const AnbocasOrderLogModel({
     this.id,
@@ -21,21 +21,21 @@ class AnbocasOrderLogModel extends Equatable {
         createdAt,
       ];
 
-  factory AnbocasOrderLogModel.fromJson(Map<String, dynamic> json) {
+  factory AnbocasOrderLogModel.fromMap(Map<String, dynamic> map) {
     return AnbocasOrderLogModel(
-      id: json["id"],
-      orderId: json["order_id"],
-      text: json["text"],
-      createdAt: json["created_at"],
+      id: map["id"],
+      orderId: map["order_id"],
+      text: map["text"],
+      createdAt: DateTime.tryParse(map["created_at"] ?? ''),
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
       "id": id,
       "order_id": orderId,
       "text": text,
-      "created_at": createdAt,
+      "created_at": createdAt?.toString(),
     };
   }
 
@@ -43,7 +43,7 @@ class AnbocasOrderLogModel extends Equatable {
     String? id,
     String? orderId,
     String? text,
-    String? createdAt,
+    DateTime? createdAt,
   }) {
     return AnbocasOrderLogModel(
       id: id ?? this.id,

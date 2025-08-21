@@ -31,20 +31,20 @@ class AnbocasOrderTicketModel extends Equatable {
         ticket,
       ];
 
-  factory AnbocasOrderTicketModel.fromJson(Map<String, dynamic> json) {
+  factory AnbocasOrderTicketModel.fromMap(Map<String, dynamic> map) {
     return AnbocasOrderTicketModel(
-      id: json["id"],
-      orderId: json["order_id"],
-      ticketId: json["ticket_id"],
-      price: double.parse(json["price"]),
-      total: double.parse(json["total"]),
-      ticket: json["ticket"] != null
-          ? AnbocasTicketModel.fromJson(json["ticket"])
+      id: map["id"],
+      orderId: map["order_id"],
+      ticketId: map["ticket_id"],
+      price: double.parse(map["price"]),
+      total: double.parse(map["total"]),
+      ticket: map["ticket"] != null
+          ? AnbocasTicketModel.fromMap(map["ticket"])
           : null,
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data["id"] = id;
     data["order_id"] = orderId;
@@ -53,7 +53,7 @@ class AnbocasOrderTicketModel extends Equatable {
     data["total"] = total;
 
     if (ticket != null) {
-      data["ticket"] = ticket?.toJson();
+      data["ticket"] = ticket?.toMap();
     }
 
     return data;

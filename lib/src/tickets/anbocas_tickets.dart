@@ -1,6 +1,5 @@
 import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
 import 'package:anbocas_tickets_api/src/tickets/constants/anbocas_ticket_routes.dart';
-import 'package:anbocas_tickets_api/src/tickets/constants/anbocas_ticket_status.dart';
 import 'package:dio/dio.dart';
 
 class AnbocasTickets {
@@ -31,7 +30,7 @@ class AnbocasTickets {
 
       if (data["data"] != null && statusResponse != null) {
         final tickets = (data["data"] as List)
-            .map((e) => AnbocasTicketModel.fromJson(e))
+            .map((e) => AnbocasTicketModel.fromMap(e))
             .toList();
 
         return AnbocasPaginatedResponse(

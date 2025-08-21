@@ -21,16 +21,16 @@ class AnbocasCurrencyModel extends Equatable {
         symbol,
       ];
 
-  factory AnbocasCurrencyModel.fromJson(Map<String, dynamic> json) {
+  factory AnbocasCurrencyModel.fromMap(Map<String, dynamic> map) {
     return AnbocasCurrencyModel(
-      id: json["id"],
-      name: json["name"],
-      code: json["code"],
-      symbol: json["symbol"],
+      id: map["id"],
+      name: map["name"],
+      code: map["code"],
+      symbol: map["symbol"],
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data["id"] = id;
     data["name"] = name;

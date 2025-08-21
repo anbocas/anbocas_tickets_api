@@ -4,28 +4,28 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:toastification/toastification.dart';
 
-class CompanyDropdownFormField extends StatefulWidget {
-  const CompanyDropdownFormField({
+class CurrencyDropdownFormField extends StatefulWidget {
+  const CurrencyDropdownFormField({
     super.key,
     this.value,
     this.onChanged,
   });
 
-  final AnbocasCompanyModel? value;
-  final void Function(AnbocasCompanyModel? value)? onChanged;
+  final AnbocasCurrencyModel? value;
+  final void Function(AnbocasCurrencyModel? value)? onChanged;
 
   @override
-  State<CompanyDropdownFormField> createState() =>
-      _CompanyDropdownFormFieldState();
+  State<CurrencyDropdownFormField> createState() =>
+      _CurrencyDropdownFormFieldState();
 }
 
-class _CompanyDropdownFormFieldState extends State<CompanyDropdownFormField> {
+class _CurrencyDropdownFormFieldState extends State<CurrencyDropdownFormField> {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField(
       value: widget.value,
       decoration: const InputDecoration(
-        hintText: 'Select Company',
+        hintText: 'Select Currency',
         border: OutlineInputBorder(),
       ),
       items: anbocasCompanies
@@ -46,7 +46,7 @@ class _CompanyDropdownFormFieldState extends State<CompanyDropdownFormField> {
               children: [
                 const Icon(Icons.arrow_drop_down),
                 InkWell(
-                  onTap: getCompanies,
+                  onTap: () => getCurrencies(),
                   child: const Icon(Icons.refresh),
                 ),
                 const Gap(8),
@@ -57,22 +57,22 @@ class _CompanyDropdownFormFieldState extends State<CompanyDropdownFormField> {
   }
 
   bool isLoading = false;
-  List<AnbocasCompanyModel> anbocasCompanies = [];
-  final anbocasCompaniesSDK = AnbocasCompanies();
+  List<AnbocasCurrencyModel> anbocasCompanies = [];
+  final anbocasCompaniesSDK = AnbocasCurrency();
 
   @override
   void initState() {
     super.initState();
-    getCompanies();
+    getCurrencies();
   }
 
-  void getCompanies() async {
+  void getCurrencies() async {
     setState(() {
       isLoading = true;
     });
 
     try {
-      final res = await anbocasCompaniesSDK.getCompanies(paginate: false);
+      final res = await anbocasCompaniesSDK.getCurrencies(paginate: false);
       anbocasCompanies = res.data;
     } catch (e) {
       if (kDebugMode) print(e);

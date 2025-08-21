@@ -6,10 +6,10 @@ import 'package:anbocas_tickets_api/src/shared/models/anbocas_order_ticket_model
 class AnbocasEventGuestsModel extends Equatable {
   final String? name;
   final String? email;
-  final dynamic phone;
+  final String? phone;
   final String? code;
-  final String? checkInTime;
-  final AnbocasCheckInStatus status;
+  final DateTime? checkInTime;
+  final AnbocasCheckInStatus? status;
   final AnbocasOrderTicketModel? orderTicket;
 
   const AnbocasEventGuestsModel({
@@ -33,15 +33,15 @@ class AnbocasEventGuestsModel extends Equatable {
         orderTicket,
       ];
 
-  factory AnbocasEventGuestsModel.fromJson(Map<String, dynamic> json) {
+  factory AnbocasEventGuestsModel.fromMap(Map<String, dynamic> map) {
     return AnbocasEventGuestsModel(
-      name: json["name"],
-      email: json["email"],
-      phone: json["phone"],
-      code: json["code"],
-      checkInTime: json["check_in_time"],
-      status: AnbocasCheckInStatus.fromValue(json["status"]),
-      orderTicket: AnbocasOrderTicketModel.fromJson(json['order_ticket']),
+      name: map["name"],
+      email: map["email"],
+      phone: map["phone"],
+      code: map["code"],
+      checkInTime: map["check_in_time"],
+      status: AnbocasCheckInStatus.fromValue(map["status"]),
+      orderTicket: AnbocasOrderTicketModel.fromMap(map['order_ticket']),
     );
   }
 
@@ -51,17 +51,17 @@ class AnbocasEventGuestsModel extends Equatable {
       "email": email,
       "phone": phone,
       "code": code,
-      "check_in_time": checkInTime,
-      "status": status,
+      "check_in_time": checkInTime?.toString(),
+      "status": status?.value,
     };
   }
 
   AnbocasEventGuestsModel copyWith({
     String? name,
     String? email,
-    dynamic phone,
+    String? phone,
     String? code,
-    String? checkInTime,
+    DateTime? checkInTime,
     AnbocasCheckInStatus? status,
     AnbocasOrderTicketModel? orderTicket,
   }) {

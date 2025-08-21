@@ -37,23 +37,23 @@ class AnbocasCategoryModel extends Equatable {
         parentId,
       ];
 
-  factory AnbocasCategoryModel.fromJson(Map<String, dynamic> json) {
+  factory AnbocasCategoryModel.fromMap(Map<String, dynamic> map) {
     return AnbocasCategoryModel(
-      id: json["id"],
-      userId: json["user_id"],
-      name: json["name"],
-      slug: json["slug"],
-      parentId: json["parent_id"],
-      createdAt: DateTime.tryParse(json["created_at"] ?? ''),
-      updatedAt: DateTime.tryParse(json["updated_at"] ?? ''),
-      deletedAt: DateTime.tryParse(json["deleted_at"] ?? ''),
-      status: json["status"] != null
-          ? AnbocasCategoryStatus.fromValue(json["status"])
+      id: map["id"],
+      userId: map["user_id"],
+      name: map["name"],
+      slug: map["slug"],
+      parentId: map["parent_id"],
+      createdAt: DateTime.tryParse(map["created_at"] ?? ''),
+      updatedAt: DateTime.tryParse(map["updated_at"] ?? ''),
+      deletedAt: DateTime.tryParse(map["deleted_at"] ?? ''),
+      status: map["status"] != null
+          ? AnbocasCategoryStatus.fromValue(map["status"])
           : null,
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
       "id": id,
       "user_id": userId,

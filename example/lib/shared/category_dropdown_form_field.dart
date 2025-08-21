@@ -24,6 +24,10 @@ class _CategoryDropdownFormFieldState extends State<CategoryDropdownFormField> {
   Widget build(BuildContext context) {
     return DropdownButtonFormField(
       value: widget.value,
+      decoration: const InputDecoration(
+        hintText: 'Select Category',
+        border: OutlineInputBorder(),
+      ),
       items: anbocasCompanies
           .map(
             (e) => DropdownMenuItem(

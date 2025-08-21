@@ -29,7 +29,7 @@ class AnbocasCompanies {
         final statusResponse = response.data['status'];
 
         final companies = ((paginate ? data["data"] : data) as List)
-            .map((e) => AnbocasCompanyModel.fromJson(e))
+            .map((e) => AnbocasCompanyModel.fromMap(e))
             .toList();
 
         return AnbocasPaginatedResponse(
@@ -56,7 +56,7 @@ class AnbocasCompanies {
       );
 
       if (response.statusCode == 200) {
-        return AnbocasCompanyModel.fromJson(response.data['data']);
+        return AnbocasCompanyModel.fromMap(response.data['data']);
       } else {
         throw Exception("Failed to get company: ${response.statusMessage}");
       }
@@ -77,28 +77,20 @@ class AnbocasCompanies {
     String? supportEmail,
     String? parentCommission,
     String? parentId,
-    String? bannerFilePath,
     String? logoFilePath,
-    String? description,
   }) async {
     try {
       MultipartFile? logo;
-      MultipartFile? banner;
 
       if (logoFilePath != null && logoFilePath.isNotEmpty) {
         logo = await MultipartFile.fromFile(
           logoFilePath,
-          filename: bannerFilePath?.split('/').last,
+          filename: logoFilePath.split('/').last,
         );
-      }
-      if (bannerFilePath != null && bannerFilePath.isNotEmpty) {
-        banner = await MultipartFile.fromFile(bannerFilePath,
-            filename: bannerFilePath.split('/').last);
       }
 
       final formData = FormData.fromMap({
         'logo': logo,
-        'banner': banner,
         'name': name,
         'website': website,
         'location': location,
@@ -120,7 +112,7 @@ class AnbocasCompanies {
       );
 
       if (response.statusCode == 200) {
-        return AnbocasCompanyModel.fromJson(response.data['data']);
+        return AnbocasCompanyModel.fromMap(response.data['data']);
       } else {
         throw Exception("Failed to create company: ${response.statusMessage}");
       }
@@ -149,51 +141,53 @@ class AnbocasCompanies {
     }
   }
 
-  Future<AnbocasCompanyModel?> updateCompany({
+  Future<AnbocasCompanyModel> updateCompany({
     required String companyId,
     String? name,
-    String? description,
+    String? currencyId,
+    String brandColor = "#000000",
     String? website,
     String? location,
-    String? latitude,
-    String? longitude,
-    String? startDate,
-    String? endDate,
-    String? bannerFilePath,
+    String? phone,
+    String? taxId,
+    String? supportPhone,
+    String? supportEmail,
+    String? parentCommission,
+    String? parentId,
+    String? logoFilePath,
   }) async {
     try {
       final dio = AnbocasTicketsConfig.instance.dio;
+      MultipartFile? logo;
 
-      MultipartFile? banner;
-      if (bannerFilePath != null) {
-        banner = await MultipartFile.fromFile(bannerFilePath,
-            filename: bannerFilePath.split('/').last);
+      if (logoFilePath != null && logoFilePath.isNotEmpty) {
+        logo = await MultipartFile.fromFile(
+          logoFilePath,
+          filename: logoFilePath.split('/').last,
+        );
       }
-      var formData = FormData();
+      final data = <String, dynamic>{};
+      data['logo'] = logo;
+      data['name'] = name;
+      data['website'] = website;
+      data['location'] = location;
+      data['phone'] = phone;
+      data['tax_id'] = taxId;
+      data['currency_id'] = currencyId;
+      data['brand_color'] = brandColor;
+      data['support_phone'] = supportPhone;
+      data['support_email'] = supportEmail;
+      data['parent_comission'] = parentCommission;
+      data['parent_id'] = parentId;
 
-      if (name != null) formData.fields.add(MapEntry('name', name));
-      if (description != null) {
-        formData.fields.add(MapEntry('description', description));
-      }
-      if (website != null) formData.fields.add(MapEntry('website', website));
-      if (location != null) formData.fields.add(MapEntry('location', location));
-      if (latitude != null) formData.fields.add(MapEntry('latitude', latitude));
-      if (longitude != null) {
-        formData.fields.add(MapEntry('longitude', longitude));
-      }
-      if (startDate != null) {
-        formData.fields.add(MapEntry('start_date', startDate));
-      }
-      if (endDate != null) formData.fields.add(MapEntry('end_date', endDate));
-      if (banner != null) formData.files.add(MapEntry('banner', banner));
-
-      final response = await dio.put(
+      final formData = FormData.fromMap(data);
+      final response = await dio.post(
         AnbocasCompanyRoutes.updateCompany(companyId),
         data: formData,
       );
 
       if (response.statusCode == 200) {
-        return AnbocasCompanyModel.fromJson(response.data['data']);
+        return AnbocasCompanyModel.fromMap(response.data['data']);
       } else {
         throw Exception("Failed to update company: ${response.statusMessage}");
       }

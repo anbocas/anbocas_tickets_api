@@ -1,4 +1,5 @@
 import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
+import 'package:example/shared/currency_dropdown_form_field.dart';
 import 'package:example/shared/my_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -40,14 +41,13 @@ class _CompanyFormScreenState extends State<CompanyFormScreen> {
             hintText: 'Company Name',
           ),
           const Gap(20),
-          MyTextField(
-            controller: description,
-            hintText: 'Company description',
-          ),
-          const Gap(20),
-          MyTextField(
-            controller: currencyId,
-            hintText: 'Currency Id',
+          CurrencyDropdownFormField(
+            value: currency,
+            onChanged: (value) {
+              setState(() {
+                currency = value;
+              });
+            },
           ),
           const Gap(20),
           MyTextField(
@@ -96,11 +96,6 @@ class _CompanyFormScreenState extends State<CompanyFormScreen> {
           ),
           const Gap(20),
           MyTextField(
-            controller: bannerFilePath,
-            hintText: 'Banner File Path',
-          ),
-          const Gap(20),
-          MyTextField(
             controller: logoFilePath,
             hintText: 'Logo FilePath',
           ),
@@ -124,7 +119,7 @@ class _CompanyFormScreenState extends State<CompanyFormScreen> {
   bool isLoading = false;
 
   final name = TextEditingController();
-  final currencyId = TextEditingController();
+  AnbocasCurrencyModel? currency;
   final brandColor = TextEditingController();
   final location = TextEditingController();
   final website = TextEditingController();
@@ -134,9 +129,7 @@ class _CompanyFormScreenState extends State<CompanyFormScreen> {
   final supportEmail = TextEditingController();
   final parentCommission = TextEditingController();
   final parentId = TextEditingController();
-  final bannerFilePath = TextEditingController();
   final logoFilePath = TextEditingController();
-  final description = TextEditingController();
 
   @override
   void initState() {
@@ -144,41 +137,34 @@ class _CompanyFormScreenState extends State<CompanyFormScreen> {
     final company = widget.company;
     if (company == null) {
       name.text = 'Company 1';
-      currencyId.text = '';
-      brandColor.text = '';
+      brandColor.text = '#0000ff';
       location.text = 'Remote';
       website.text = 'https://forwardcode.com';
-      phone.text = '1234567890';
+      phone.text = '+911234567890';
       taxId.text = '';
-      supportPhone.text = '123456890';
+      supportPhone.text = '+91123456890';
       supportEmail.text = 'example@yopmail.com';
       parentCommission.text = '';
       parentId.text = '';
-      bannerFilePath.text = '';
       logoFilePath.text = '';
-      description.text = 'This is the description for my company.';
     } else {
       name.text = company.name ?? '';
-      currencyId.text = company.currencyId ?? '';
       brandColor.text = company.brandColor ?? '';
-      // location.text = company.lo ?? '';
+      location.text = company.location ?? '';
       // website.text = company.website ?? '';
-      // phone.text = company.phone ?? '';
-      // taxId.text = company. ?? '';
-      // supportPhone.text = company.su ?? '';
-      // supportEmail.text = company.email ?? '';
+      phone.text = company.phoneNumber ?? '';
+      taxId.text = company.taxId ?? '';
+      // supportPhone.text = company.supportPhone ?? '';
+      supportEmail.text = company.supportEmail ?? '';
       parentCommission.text = company.parentCommission ?? '';
       parentId.text = company.parentId ?? '';
-      // bannerFilePath.text = company.ba ?? '';
       logoFilePath.text = company.logo ?? '';
-      // description.text = company.de ?? '';
     }
   }
 
   @override
   void dispose() {
     name.dispose();
-    currencyId.dispose();
     brandColor.dispose();
     location.dispose();
     website.dispose();
@@ -188,9 +174,7 @@ class _CompanyFormScreenState extends State<CompanyFormScreen> {
     supportEmail.dispose();
     parentCommission.dispose();
     parentId.dispose();
-    bannerFilePath.dispose();
     logoFilePath.dispose();
-    description.dispose();
     super.dispose();
   }
 
@@ -199,22 +183,40 @@ class _CompanyFormScreenState extends State<CompanyFormScreen> {
       isLoading = true;
     });
     try {
-      final company = await _anbocasCompanys.createCompany(
-        name: name.text,
-        description: description.text,
-        currencyId: currencyId.text,
-        brandColor: brandColor.text,
-        location: location.text,
-        website: website.text,
-        phone: phone.text,
-        taxId: taxId.text,
-        supportPhone: supportPhone.text,
-        supportEmail: supportEmail.text,
-        parentCommission: parentCommission.text,
-        parentId: parentId.text,
-        bannerFilePath: bannerFilePath.text,
-        logoFilePath: logoFilePath.text,
-      );
+      late final AnbocasCompanyModel company;
+
+      if (widget.company == null) {
+        company = await _anbocasCompanys.createCompany(
+          name: name.text,
+          currencyId: currency?.id ?? '',
+          brandColor: brandColor.text,
+          location: location.text,
+          website: website.text,
+          phone: phone.text,
+          taxId: taxId.text,
+          supportPhone: supportPhone.text,
+          supportEmail: supportEmail.text,
+          parentCommission: parentCommission.text,
+          parentId: parentId.text,
+          logoFilePath: logoFilePath.text,
+        );
+      } else {
+        company = await _anbocasCompanys.updateCompany(
+          companyId: widget.company?.id ?? '',
+          name: name.text,
+          currencyId: currency?.id ?? '',
+          brandColor: brandColor.text,
+          location: location.text,
+          website: website.text,
+          phone: phone.text,
+          taxId: taxId.text,
+          supportPhone: supportPhone.text,
+          supportEmail: supportEmail.text,
+          parentCommission: parentCommission.text,
+          parentId: parentId.text,
+          logoFilePath: logoFilePath.text,
+        );
+      }
 
       if (mounted) {
         toastification.show(

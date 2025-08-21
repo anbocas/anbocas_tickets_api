@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:anbocas_tickets_api/anbocas_tickets_api.dart';
-import 'package:anbocas_tickets_api/src/categories/constants/anbocas_category_routes.dart';
+import 'package:anbocas_tickets_api/src/currency/constants/anbocas_currency_routes.dart';
 
-class AnbocasCategories {
-  Future<AnbocasPaginatedResponse<List<AnbocasCategoryModel>>> getCategories({
+class AnbocasCurrency {
+  Future<AnbocasPaginatedResponse<List<AnbocasCurrencyModel>>> getCurrencies({
     int page = 1,
     required bool paginate,
     String? search,
@@ -14,7 +14,7 @@ class AnbocasCategories {
       final dio = AnbocasTicketsConfig.instance.dio;
 
       final response = await dio.get(
-        AnbocasCategoryRoutes.getCategories,
+        AnbocasCurrencyRoutes.getCurrencies,
         queryParameters: {
           'page': page,
           'paginate': paginate,
@@ -27,16 +27,16 @@ class AnbocasCategories {
         final data = response.data['data'];
         final statusResponse = response.data['status'];
 
-        final categories = ((paginate ? data["data"] : data) as List)
-            .map((e) => AnbocasCategoryModel.fromMap(e))
+        final currencies = ((paginate ? data["data"] : data) as List)
+            .map((e) => AnbocasCurrencyModel.fromMap(e))
             .toList();
 
         return AnbocasPaginatedResponse(
-          data: categories,
+          data: currencies,
           currentPage: paginate ? data['current_page'] : null,
           lastPage: paginate ? data['last_page'] : null,
           perPage: paginate ? data['per_page'] : null,
-          status: AnbocasStatusModel.fromMap(statusResponse),
+          status: AnbocasStatusModel.fromMap(statusResponse ?? {}),
         );
       }
 
@@ -46,23 +46,23 @@ class AnbocasCategories {
     }
   }
 
-  Future<AnbocasCategoryModel> getCategory(String categoryId) async {
-    try {
-      final dio = AnbocasTicketsConfig.instance.dio;
+  // Future<AnbocasCategoryModel> getCategory(String categoryId) async {
+  //   try {
+  //     final dio = AnbocasTicketsConfig.instance.dio;
 
-      final response = await dio.get(
-        AnbocasCategoryRoutes.getCategoryDetails(categoryId),
-      );
+  //     final response = await dio.get(
+  //       AnbocasCategoryRoutes.getCategoryDetails(categoryId),
+  //     );
 
-      if (response.statusCode == 200) {
-        return AnbocasCategoryModel.fromMap(response.data['data']);
-      } else {
-        throw Exception("Failed to get company: ${response.statusMessage}");
-      }
-    } catch (e, st) {
-      throw AnbocasApiException.fromException(e, st);
-    }
-  }
+  //     if (response.statusCode == 200) {
+  //       return AnbocasCategoryModel.fromMap(response.data['data']);
+  //     } else {
+  //       throw Exception("Failed to get company: ${response.statusMessage}");
+  //     }
+  //   } catch (e, st) {
+  //     throw AnbocasApiException.fromException(e, st);
+  //   }
+  // }
 
   // Future<AnbocasCompanyModel> createCompany({
   //   required String name,

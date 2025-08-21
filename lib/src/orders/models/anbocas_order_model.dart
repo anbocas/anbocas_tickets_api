@@ -95,19 +95,19 @@ class AnbocasOrderModel extends Equatable {
       createdAt: json["created_at"],
       updatedAt: json["updated_at"],
       tickets: (json["tickets"] as List)
-          .map((e) => AnbocasTicketModel.fromJson(e))
+          .map((e) => AnbocasTicketModel.fromMap(e))
           .toList(),
       event: json["event"] != null
-          ? AnbocasEventModel.fromJson(json["event"])
+          ? AnbocasEventModel.fromMap(json["event"])
           : null,
       company: json["company"] != null
-          ? AnbocasCompanyModel.fromJson(json["company"])
+          ? AnbocasCompanyModel.fromMap(json["company"])
           : null,
       payment: json["payment"] != null
-          ? AnbocasOrderPaymentModel.fromJson(json["payment"])
+          ? AnbocasOrderPaymentModel.fromMap(json["payment"])
           : null,
       logs: (json["logs"] as List)
-          .map((e) => AnbocasOrderLogModel.fromJson(e))
+          .map((e) => AnbocasOrderLogModel.fromMap(e))
           .toList(),
     );
   }
@@ -137,19 +137,19 @@ class AnbocasOrderModel extends Equatable {
       "status": status,
       "created_at": createdAt,
       "updated_at": updatedAt,
-      "tickets": tickets.map((e) => e.toJson()).toList(),
+      "tickets": tickets.map((e) => e.toMap()).toList(),
     };
 
     if (event != null) {
-      data["event"] = event?.toJson();
+      data["event"] = event?.toMap();
     }
     if (company != null) {
-      data["company"] = company?.toJson();
+      data["company"] = company?.toMap();
     }
     if (payment != null) {
       data["payment"] = payment?.toJson();
     }
-    data["logs"] = logs.map((e) => e.toJson()).toList();
+    data["logs"] = logs.map((e) => e.toMap()).toList();
     return data;
   }
 }

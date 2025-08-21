@@ -44,3 +44,6 @@ export 'src/orders/models/anbocas_order_model.dart';
 export 'src/orders/models/anbocas_order_payment_model.dart';
 
 export 'src/orders/anbocas_orders.dart';
+
+// currency
+export 'src/currency/anbocas_currency.dart';

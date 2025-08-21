@@ -1,3 +1,4 @@
+import 'package:anbocas_tickets_api/src/shared/utils/data_serializer.dart';
 import 'package:equatable/equatable.dart';
 
 class AnbocasEventStatsModel extends Equatable {
@@ -18,15 +19,15 @@ class AnbocasEventStatsModel extends Equatable {
         isAmount,
       ];
 
-  factory AnbocasEventStatsModel.fromJson(Map<String, dynamic> json) {
+  factory AnbocasEventStatsModel.fromMap(Map<String, dynamic> map) {
     return AnbocasEventStatsModel(
-      title: json["title"],
-      value: json["value"],
-      isAmount: json["is_amount"],
+      title: map["title"],
+      value: DataSerializer.toInt(map["value"]),
+      isAmount: DataSerializer.toBool(map["is_amount"]),
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
       "title": title,
       "value": value,

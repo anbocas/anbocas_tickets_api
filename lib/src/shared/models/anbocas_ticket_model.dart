@@ -49,27 +49,27 @@ class AnbocasTicketModel extends Equatable {
         formattedPrice,
       ];
 
-  factory AnbocasTicketModel.fromJson(Map<String, dynamic> json) {
+  factory AnbocasTicketModel.fromMap(Map<String, dynamic> map) {
     return AnbocasTicketModel(
-      id: json["id"],
-      eventId: json["event_id"],
-      name: json["name"],
-      description: json["description"],
-      price: json["price"],
-      capacity: json["capacity"],
-      available: json["available"],
-      availableFrom: json["available_from"],
-      availableTo: json["available_to"],
-      status: json["status"] != null
-          ? AnbocasTicketStatus.fromValue(json['status'])
+      id: map["id"],
+      eventId: map["event_id"],
+      name: map["name"],
+      description: map["description"],
+      price: map["price"],
+      capacity: map["capacity"],
+      available: map["available"],
+      availableFrom: map["available_from"],
+      availableTo: map["available_to"],
+      status: map["status"] != null
+          ? AnbocasTicketStatus.fromValue(map['status'])
           : null,
-      createdAt: json["created_at"],
-      updatedAt: json["updated_at"],
-      formattedPrice: json["formatted_price"],
+      createdAt: map["created_at"],
+      updatedAt: map["updated_at"],
+      formattedPrice: map["formatted_price"],
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
       "id": id,
       "event_id": eventId,
