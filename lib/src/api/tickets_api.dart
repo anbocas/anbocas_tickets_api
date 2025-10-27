@@ -48,8 +48,8 @@ class TicketsApi {
     required String availableFrom,
     required String availableTo,
     required String status,
-    double? parentCommission,
-    int guestCount = 1,
+    String? parentCommission,
+    String guestCount = "1",
   }) async {
     try {
       var data = FormData.fromMap({
@@ -129,8 +129,8 @@ class TicketsApi {
       String? availableFrom,
       String? availableTo,
       String? status,
-      double? parentCommission,
-      int guestCount = 1}) async {
+      String? parentCommission,
+      String guestCount = "1"}) async {
     try {
       Map<String, dynamic> data = {};
 
