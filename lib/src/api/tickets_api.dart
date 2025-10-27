@@ -49,6 +49,7 @@ class TicketsApi {
     required String availableTo,
     required String status,
     double? parentCommission,
+    int guestCount = 1,
   }) async {
     try {
       var data = FormData.fromMap({
@@ -61,6 +62,7 @@ class TicketsApi {
         'available_to': availableTo,
         'status': status,
         'parent_commission': parentCommission,
+        'guest_count': guestCount,
       });
 
       final response = await _client.dio.post(
@@ -127,7 +129,8 @@ class TicketsApi {
       String? availableFrom,
       String? availableTo,
       String? status,
-      double? parentCommission}) async {
+      double? parentCommission,
+      int guestCount = 1}) async {
     try {
       Map<String, dynamic> data = {};
 
@@ -140,6 +143,7 @@ class TicketsApi {
       if (availableTo != null) data['available_to'] = availableTo;
       if (status != null) data['status'] = status;
       data['parent_commission'] = parentCommission;
+      data['guest_count'] = guestCount;
       final response = await _client.dio.put(
         '${ApiConstant.TICKET_END_POINT}/$ticketId',
         data: data,
