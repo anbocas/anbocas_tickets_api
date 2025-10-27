@@ -39,15 +39,17 @@ class TicketsApi {
     }
   }
 
-  Future<dynamic> createTicket(
-      {required String eventId,
-      required String name,
-      String? description,
-      required String capacity,
-      required String price,
-      required String availableFrom,
-      required String availableTo,
-      required String status}) async {
+  Future<dynamic> createTicket({
+    required String eventId,
+    required String name,
+    String? description,
+    required String capacity,
+    required String price,
+    required String availableFrom,
+    required String availableTo,
+    required String status,
+    double? parentCommission,
+  }) async {
     try {
       var data = FormData.fromMap({
         'event_id': eventId,
@@ -57,7 +59,8 @@ class TicketsApi {
         'price': price,
         'available_from': availableFrom,
         'available_to': availableTo,
-        'status': status
+        'status': status,
+        'parent_commission': parentCommission,
       });
 
       final response = await _client.dio.post(
@@ -123,7 +126,8 @@ class TicketsApi {
       String? price,
       String? availableFrom,
       String? availableTo,
-      String? status}) async {
+      String? status,
+      double? parentCommission}) async {
     try {
       Map<String, dynamic> data = {};
 
@@ -135,7 +139,7 @@ class TicketsApi {
       if (availableFrom != null) data['available_from'] = availableFrom;
       if (availableTo != null) data['available_to'] = availableTo;
       if (status != null) data['status'] = status;
-
+      data['parent_commission'] = parentCommission;
       final response = await _client.dio.put(
         '${ApiConstant.TICKET_END_POINT}/$ticketId',
         data: data,
