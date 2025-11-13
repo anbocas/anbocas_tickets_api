@@ -1,3 +1,7 @@
+## 0.0.10
+
+* API Updates
+
 ## 0.0.9
 
 * Add a development environment
