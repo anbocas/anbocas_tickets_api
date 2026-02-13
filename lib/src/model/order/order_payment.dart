@@ -14,21 +14,22 @@ class OrderPayment {
   String? createdAt;
   String? updatedAt;
 
-  OrderPayment(
-      {this.id,
-      this.gatewayProvider,
-      this.gatewayTransactionId,
-      this.eventId,
-      this.orderId,
-      this.method,
-      this.email,
-      this.phone,
-      this.amount,
-      this.payerName,
-      this.fee,
-      this.tax,
-      this.createdAt,
-      this.updatedAt});
+  OrderPayment({
+    this.id,
+    this.gatewayProvider,
+    this.gatewayTransactionId,
+    this.eventId,
+    this.orderId,
+    this.method,
+    this.email,
+    this.phone,
+    this.amount,
+    this.payerName,
+    this.fee,
+    this.tax,
+    this.createdAt,
+    this.updatedAt,
+  });
 
   OrderPayment.fromJson(Map<String, dynamic> json) {
     if (json["id"] is String) {
@@ -76,21 +77,21 @@ class OrderPayment {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> _data = <String, dynamic>{};
-    _data["id"] = id;
-    _data["gateway_provider"] = gatewayProvider;
-    _data["gateway_transaction_id"] = gatewayTransactionId;
-    _data["event_id"] = eventId;
-    _data["order_id"] = orderId;
-    _data["method"] = method;
-    _data["email"] = email;
-    _data["phone"] = phone;
-    _data["amount"] = amount;
-    _data["payer_name"] = payerName;
-    _data["fee"] = fee;
-    _data["tax"] = tax;
-    _data["created_at"] = createdAt;
-    _data["updated_at"] = updatedAt;
-    return _data;
+    final Map<String, dynamic> val = <String, dynamic>{};
+    val["id"] = id;
+    val["gateway_provider"] = gatewayProvider;
+    val["gateway_transaction_id"] = gatewayTransactionId;
+    val["event_id"] = eventId;
+    val["order_id"] = orderId;
+    val["method"] = method;
+    val["email"] = email;
+    val["phone"] = phone;
+    val["amount"] = amount;
+    val["payer_name"] = payerName;
+    val["fee"] = fee;
+    val["tax"] = tax;
+    val["created_at"] = createdAt;
+    val["updated_at"] = updatedAt;
+    return val;
   }
 }

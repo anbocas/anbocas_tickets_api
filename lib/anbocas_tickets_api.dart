@@ -1,4 +1,4 @@
-library anbocas_tickets_api;
+library;
 
 export 'src/anbocas_tickets_api.dart';
 export 'src/model/company_model.dart';

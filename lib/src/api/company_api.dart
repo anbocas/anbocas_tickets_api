@@ -12,7 +12,7 @@ class CompanyApi {
   Future<List<AnbocasCompanyModel>?> get(CompanyGetRequest req) async {
     try {
       final response = await _client.dio.get(
-        ApiConstant.COMPANY_END_POINT,
+        ApiConstant.companyEndPoint,
         queryParameters: req.toJson(),
       );
       return (response.data['data'] as List)
@@ -24,12 +24,10 @@ class CompanyApi {
     }
   }
 
-  Future<AnbocasCompanyModel?> details({
-    required String companyId,
-  }) async {
+  Future<AnbocasCompanyModel?> details({required String companyId}) async {
     try {
       final response = await _client.dio.get(
-        '${ApiConstant.COMPANY_END_POINT}/$companyId',
+        '${ApiConstant.companyEndPoint}/$companyId',
       );
 
       if (response.statusCode == 200) {
@@ -48,7 +46,7 @@ class CompanyApi {
       var formData = await req.toJson();
 
       final response = await _client.dio.post(
-        '${ApiConstant.COMPANY_END_POINT}/create',
+        '${ApiConstant.companyEndPoint}/create',
         data: formData,
       );
 
@@ -63,12 +61,10 @@ class CompanyApi {
     }
   }
 
-  Future<bool> deleteCompany({
-    required String companyId,
-  }) async {
+  Future<bool> deleteCompany({required String companyId}) async {
     try {
       final response = await _client.dio.delete(
-        '${ApiConstant.COMPANY_END_POINT}/$companyId',
+        '${ApiConstant.companyEndPoint}/$companyId',
       );
 
       if (response.statusCode == 200) {
@@ -86,7 +82,7 @@ class CompanyApi {
     try {
       var formData = await req.toJson();
       final response = await _client.dio.put(
-        '${ApiConstant.COMPANY_END_POINT}/${req.companyId}',
+        '${ApiConstant.companyEndPoint}/${req.companyId}',
         data: formData,
       );
 

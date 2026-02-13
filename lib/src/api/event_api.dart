@@ -34,7 +34,7 @@ class EventApi {
 
       // Make the API request using RequestClient
       final response = await _client.dio.get(
-        ApiConstant.EVENT_END_POINT,
+        ApiConstant.eventEndPoint,
         queryParameters: queryParameters,
       );
 
@@ -70,7 +70,7 @@ class EventApi {
 
       // Make the API request using RequestClient
       final response = await _client.dio.get(
-        ApiConstant.EVENT_GUESTS(eventId),
+        ApiConstant.eventGuests(eventId),
         queryParameters: queryParameters,
       );
 
@@ -83,37 +83,39 @@ class EventApi {
     }
   }
 
-  Future<EventSummaryResponse?> summary({
-    required String eventId,
-  }) async {
+  Future<EventSummaryResponse?> summary({required String eventId}) async {
     try {
       // Make the API request using RequestClient
-      final response = await _client.dio.get(
-        ApiConstant.EVENT_SUMMARY(eventId),
-      );
+      final response = await _client.dio.get(ApiConstant.eventSummary(eventId));
 
       if (response.data['data'] != null) {
         var eventStats = <EventStats>[];
         if (response.data['data']['stats'] != null) {
-          eventStats = (response.data['data']['stats'] as List)
-              .map((e) => EventStats.fromJson(e))
-              .toList();
+          eventStats =
+              (response.data['data']['stats'] as List)
+                  .map((e) => EventStats.fromJson(e))
+                  .toList();
         }
 
         var eventOrders = <EventOrders>[];
         if (response.data['data']['orders'] != null) {
-          eventOrders = (response.data['data']['orders'] as List)
-              .map((e) => EventOrders.fromJson(e))
-              .toList();
+          eventOrders =
+              (response.data['data']['orders'] as List)
+                  .map((e) => EventOrders.fromJson(e))
+                  .toList();
         }
 
         return EventSummaryResponse(
-            stats: eventStats,
-            orders: eventOrders,
-            message: response.data['message']);
+          stats: eventStats,
+          orders: eventOrders,
+          message: response.data['message'],
+        );
       } else {
         return EventSummaryResponse(
-            stats: [], orders: [], message: response.data['message']);
+          stats: [],
+          orders: [],
+          message: response.data['message'],
+        );
       }
     } catch (error) {
       // Handle errors
@@ -122,13 +124,11 @@ class EventApi {
     }
   }
 
-  Future<AnbocasEventModel?> eventDetails({
-    required String eventId,
-  }) async {
+  Future<AnbocasEventModel?> eventDetails({required String eventId}) async {
     try {
       // Make the API request using RequestClient
       final response = await _client.dio.get(
-        '${ApiConstant.EVENT_END_POINT}/$eventId',
+        '${ApiConstant.eventEndPoint}/$eventId',
       );
 
       if (response.data['data'] != null) {
@@ -149,8 +149,10 @@ class EventApi {
   }) async {
     try {
       // Make the API request using RequestClient
-      final response = await _client.dio.post(ApiConstant.EVENT_CHECK_IN_BULK,
-          data: {"event_id": eventId, "codes": codes});
+      final response = await _client.dio.post(
+        ApiConstant.eventCheckInBulk,
+        data: {"event_id": eventId, "codes": codes},
+      );
 
       if (response.statusCode == 200) {
         return true;
@@ -170,8 +172,10 @@ class EventApi {
   }) async {
     try {
       // Make the API request using RequestClient
-      final response = await _client.dio.post(ApiConstant.EVENT_CHECK_IN,
-          data: {"event_id": eventId, "code": code});
+      final response = await _client.dio.post(
+        ApiConstant.eventCheckIn,
+        data: {"event_id": eventId, "code": code},
+      );
 
       var data = CheckInResponse.fromJson(response.data);
       data.statusCode = response.statusCode!;
@@ -211,7 +215,8 @@ class EventApi {
     try {
       if (locationType == EventLocationType.virtual && meetingLink == null) {
         throw AnbocasFieldException(
-            "Meeting link is required for virtual events");
+          "Meeting link is required for virtual events",
+        );
       }
 
       // Prepare the file for upload
@@ -222,8 +227,10 @@ class EventApi {
           banner = bannerPath;
         } else {
           if (File(bannerPath).existsSync()) {
-            banner = await MultipartFile.fromFile(bannerPath,
-                filename: bannerPath.split('/').last);
+            banner = await MultipartFile.fromFile(
+              bannerPath,
+              filename: bannerPath.split('/').last,
+            );
           }
         }
       }
@@ -256,7 +263,7 @@ class EventApi {
 
       // Make the API request
       final response = await _client.dio.post(
-        ApiConstant.EVENT_END_POINT,
+        ApiConstant.eventEndPoint,
         data: formData,
       );
 
@@ -278,7 +285,7 @@ class EventApi {
   }) async {
     try {
       final response = await _client.dio.delete(
-        '${ApiConstant.EVENT_END_POINT}/$eventId',
+        '${ApiConstant.eventEndPoint}/$eventId',
         data: {"name": eventName},
       );
 
@@ -320,7 +327,8 @@ class EventApi {
       if (locationType == EventLocationType.virtual &&
           (meetingLink == null || meetingLink.isEmpty)) {
         throw AnbocasFieldException(
-            "Meeting link is required for virtual events");
+          "Meeting link is required for virtual events",
+        );
       }
 
       final dateFormat = DateFormat('yyyy-MM-dd HH:mm');
@@ -333,8 +341,10 @@ class EventApi {
           banner = bannerPath;
         } else {
           if (File(bannerPath).existsSync()) {
-            banner = await MultipartFile.fromFile(bannerPath,
-                filename: bannerPath.split('/').last);
+            banner = await MultipartFile.fromFile(
+              bannerPath,
+              filename: bannerPath.split('/').last,
+            );
           }
         }
       }
@@ -365,12 +375,14 @@ class EventApi {
         formData.fields.add(MapEntry('longitude', longitude));
       }
       if (startDateTime != null) {
-        formData.fields
-            .add(MapEntry('start_date', dateFormat.format(startDateTime)));
+        formData.fields.add(
+          MapEntry('start_date', dateFormat.format(startDateTime)),
+        );
       }
       if (endDateTime != null) {
-        formData.fields
-            .add(MapEntry('end_date', dateFormat.format(endDateTime)));
+        formData.fields.add(
+          MapEntry('end_date', dateFormat.format(endDateTime)),
+        );
       }
 
       if (isPublic != null) {
@@ -386,20 +398,25 @@ class EventApi {
         formData.fields.add(MapEntry('meeting_link', meetingLink));
       }
       if (groupTicketingAllowed != null) {
-        formData.fields.add(MapEntry(
-            'group_ticketing_allowed', groupTicketingAllowed ? '1' : '0'));
+        formData.fields.add(
+          MapEntry(
+            'group_ticketing_allowed',
+            groupTicketingAllowed ? '1' : '0',
+          ),
+        );
       }
       if (commission != null) {
         formData.fields.add(MapEntry('commission', commission));
       }
       if (isBookingOpen != null) {
-        formData.fields
-            .add(MapEntry('is_booking_open', isBookingOpen ? '1' : '0'));
+        formData.fields.add(
+          MapEntry('is_booking_open', isBookingOpen ? '1' : '0'),
+        );
       }
 
       // Make the API request
       final response = await _client.dio.post(
-        '${ApiConstant.EVENT_END_POINT}/$eventId',
+        '${ApiConstant.eventEndPoint}/$eventId',
         data: formData,
       );
 

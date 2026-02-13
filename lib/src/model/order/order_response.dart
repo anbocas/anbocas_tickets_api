@@ -18,14 +18,14 @@ class OrderResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> _data = <String, dynamic>{};
+    final Map<String, dynamic> val = <String, dynamic>{};
     if (data != null) {
-      _data["data"] = data?.toJson();
+      val["data"] = data?.toJson();
     }
     if (status != null) {
-      _data["status"] = status?.toJson();
+      val["status"] = status?.toJson();
     }
-    return _data;
+    return val;
   }
 }
 
@@ -43,30 +43,32 @@ class OrderData {
   int? to;
   int? total;
 
-  OrderData(
-      {this.currentPage,
-      this.data,
-      this.firstPageUrl,
-      this.from,
-      this.lastPage,
-      this.lastPageUrl,
-      this.nextPageUrl,
-      this.path,
-      this.perPage,
-      this.prevPageUrl,
-      this.to,
-      this.total});
+  OrderData({
+    this.currentPage,
+    this.data,
+    this.firstPageUrl,
+    this.from,
+    this.lastPage,
+    this.lastPageUrl,
+    this.nextPageUrl,
+    this.path,
+    this.perPage,
+    this.prevPageUrl,
+    this.to,
+    this.total,
+  });
 
   OrderData.fromJson(Map<String, dynamic> json) {
     if (json["current_page"] is int) {
       currentPage = json["current_page"];
     }
     if (json["data"] is List) {
-      data = json["data"] == null
-          ? null
-          : (json["data"] as List)
-              .map((e) => SingleOrderData.fromJson(e))
-              .toList();
+      data =
+          json["data"] == null
+              ? null
+              : (json["data"] as List)
+                  .map((e) => SingleOrderData.fromJson(e))
+                  .toList();
     }
     if (json["first_page_url"] is String) {
       firstPageUrl = json["first_page_url"];

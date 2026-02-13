@@ -24,7 +24,7 @@ class OrderApi {
       };
 
       final response = await _client.dio.get(
-        ApiConstant.GET_ORDER,
+        ApiConstant.getOrder,
         queryParameters: queryParameters,
       );
 
@@ -43,7 +43,7 @@ class OrderApi {
   Future<SingleOrderData?> details({required String orderId}) async {
     try {
       final response = await _client.dio.get(
-        '${ApiConstant.GET_ORDER}/$orderId',
+        '${ApiConstant.getOrder}/$orderId',
       );
 
       if (response.statusCode == 200) {
@@ -59,8 +59,10 @@ class OrderApi {
 
   Future<bool> cancelOrder({required String orderId}) async {
     try {
-      final response = await _client.dio
-          .post(ApiConstant.CANCEL_ORDER, data: {'order_id': orderId});
+      final response = await _client.dio.post(
+        ApiConstant.cancelOrder,
+        data: {'order_id': orderId},
+      );
 
       if (response.statusCode == 200) {
         return true;
@@ -75,8 +77,10 @@ class OrderApi {
 
   Future<bool> verifyOrderPayment({required String razorpayPaymentId}) async {
     try {
-      final response = await _client.dio.post(ApiConstant.VERIFY_ORDER_PAYMENT,
-          data: {'razorpay_payment_id': razorpayPaymentId});
+      final response = await _client.dio.post(
+        ApiConstant.verifyOrderPayment,
+        data: {'razorpay_payment_id': razorpayPaymentId},
+      );
 
       if (response.statusCode == 200) {
         return true;

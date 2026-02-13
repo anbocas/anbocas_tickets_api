@@ -28,7 +28,7 @@ class TicketsApi {
 
       // Make the API request using RequestClient
       final response = await _client.dio.get(
-        '${ApiConstant.GET_TICKET_BY_EVENT}$eventId',
+        '${ApiConstant.getTicketByEvent}$eventId',
         queryParameters: queryParameters,
       );
 
@@ -66,7 +66,7 @@ class TicketsApi {
       });
 
       final response = await _client.dio.post(
-        ApiConstant.TICKET_END_POINT,
+        ApiConstant.ticketEndPoint,
         data: data,
       );
 
@@ -81,12 +81,10 @@ class TicketsApi {
     }
   }
 
-  Future<bool> deleteTicket({
-    required String ticketId,
-  }) async {
+  Future<bool> deleteTicket({required String ticketId}) async {
     try {
       final response = await _client.dio.delete(
-        '${ApiConstant.TICKET_END_POINT}/$ticketId',
+        '${ApiConstant.ticketEndPoint}/$ticketId',
       );
 
       if (response.statusCode == 200) {
@@ -100,12 +98,10 @@ class TicketsApi {
     }
   }
 
-  Future<dynamic> getTicketById({
-    required String ticketId,
-  }) async {
+  Future<dynamic> getTicketById({required String ticketId}) async {
     try {
       final response = await _client.dio.get(
-        '${ApiConstant.TICKET_END_POINT}/$ticketId',
+        '${ApiConstant.ticketEndPoint}/$ticketId',
       );
 
       if (response.statusCode == 200) {
@@ -119,18 +115,19 @@ class TicketsApi {
     }
   }
 
-  Future<dynamic> updateTicket(
-      {required String ticketId,
-      String? eventId,
-      String? name,
-      String? description,
-      String? capacity,
-      String? price,
-      String? availableFrom,
-      String? availableTo,
-      String? status,
-      String? parentCommission,
-      String guestCount = "1"}) async {
+  Future<dynamic> updateTicket({
+    required String ticketId,
+    String? eventId,
+    String? name,
+    String? description,
+    String? capacity,
+    String? price,
+    String? availableFrom,
+    String? availableTo,
+    String? status,
+    String? parentCommission,
+    String guestCount = "1",
+  }) async {
     try {
       Map<String, dynamic> data = {};
 
@@ -145,7 +142,7 @@ class TicketsApi {
       data['parent_commission'] = parentCommission;
       data['guest_count'] = guestCount;
       final response = await _client.dio.put(
-        '${ApiConstant.TICKET_END_POINT}/$ticketId',
+        '${ApiConstant.ticketEndPoint}/$ticketId',
         data: data,
       );
 

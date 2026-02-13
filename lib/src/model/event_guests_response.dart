@@ -17,12 +17,12 @@ class EventGuestsResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> _data = <String, dynamic>{};
-    _data["data"] = data.map((e) => e.toJson()).toList();
+    final Map<String, dynamic> val = <String, dynamic>{};
+    val["data"] = data.map((e) => e.toJson()).toList();
     if (status != null) {
-      _data["status"] = status?.toJson();
+      val["status"] = status?.toJson();
     }
-    return _data;
+    return val;
   }
 }
 
@@ -31,8 +31,11 @@ class Status {
   int checkedIn = 0;
   int notCheckedIn = 0;
 
-  Status(
-      {required this.all, required this.checkedIn, required this.notCheckedIn});
+  Status({
+    required this.all,
+    required this.checkedIn,
+    required this.notCheckedIn,
+  });
 
   Status.fromJson(Map<String, dynamic> json) {
     if (json["ALL"] is int) {
@@ -47,11 +50,11 @@ class Status {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> _data = <String, dynamic>{};
-    _data["ALL"] = all;
-    _data["CHECKED_IN"] = checkedIn;
-    _data["NOT_CHECKED_IN"] = notCheckedIn;
-    return _data;
+    final Map<String, dynamic> val = <String, dynamic>{};
+    val["ALL"] = all;
+    val["CHECKED_IN"] = checkedIn;
+    val["NOT_CHECKED_IN"] = notCheckedIn;
+    return val;
   }
 }
 
@@ -64,13 +67,14 @@ class EventGuests {
   String status = 'NOT_CHECKED_IN';
   OrderTicket? orderTicket;
 
-  EventGuests(
-      {this.name,
-      this.email,
-      this.phone,
-      this.code,
-      this.checkInTime,
-      this.status = 'NOT_CHECKED_IN'});
+  EventGuests({
+    this.name,
+    this.email,
+    this.phone,
+    this.code,
+    this.checkInTime,
+    this.status = 'NOT_CHECKED_IN',
+  });
 
   EventGuests.fromJson(Map<String, dynamic> json) {
     if (json["name"] is String) {
@@ -95,13 +99,13 @@ class EventGuests {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> _data = <String, dynamic>{};
-    _data["name"] = name;
-    _data["email"] = email;
-    _data["phone"] = phone;
-    _data["code"] = code;
-    _data["check_in_time"] = checkInTime;
-    _data["status"] = status;
-    return _data;
+    final Map<String, dynamic> val = <String, dynamic>{};
+    val["name"] = name;
+    val["email"] = email;
+    val["phone"] = phone;
+    val["code"] = code;
+    val["check_in_time"] = checkInTime;
+    val["status"] = status;
+    return val;
   }
 }

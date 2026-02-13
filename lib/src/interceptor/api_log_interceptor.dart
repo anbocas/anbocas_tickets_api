@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 class ApiLogInterceptor extends Interceptor {
   final String _tag = 'log';
@@ -10,8 +11,11 @@ class ApiLogInterceptor extends Interceptor {
     this.responseHeader = true,
     this.responseBody = true,
     this.error = true,
-    this.logPrint = print,
-  });
+  }) : logPrint = _defaultLogPrint;
+
+  static void _defaultLogPrint(Object object) {
+    debugPrint(object.toString());
+  }
 
   /// Print request [Options]
   bool request;
@@ -34,19 +38,21 @@ class ApiLogInterceptor extends Interceptor {
   void Function(Object object) logPrint;
 
   void Function(Object object) infoPrint = (Object object) {
-    print('\u001b[92m$object\u001b[0m');
+    debugPrint('\u001b[92m$object\u001b[0m');
   };
   void Function(Object object) respPrint = (Object object) {
-    print('\u001b[96m$object\u001b[0m');
+    debugPrint('\u001b[96m$object\u001b[0m');
   };
 
   void Function(Object object) errorPrint = (Object object) {
-    print('\u001b[91m$object\u001b[0m');
+    debugPrint('\u001b[91m$object\u001b[0m');
   };
 
   @override
   void onRequest(
-      RequestOptions options, RequestInterceptorHandler handler) async {
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     infoPrint('*** Api Request ***');
     _printKV('uri', options.uri);
 
@@ -63,9 +69,11 @@ class ApiLogInterceptor extends Interceptor {
       infoPrint('data:');
       if (options.data is FormData) {
         _printKV(
-            'fields: ',
-            options.data.fields
-                .map((MapEntry entry) => '${entry.key}: ${entry.value}'));
+          'fields: ',
+          options.data.fields.map(
+            (MapEntry entry) => '${entry.key}: ${entry.value}',
+          ),
+        );
         _printKV('files: ', options.data.files);
       } else {
         _printAll(options.data);
